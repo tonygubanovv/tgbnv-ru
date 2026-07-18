@@ -7,6 +7,16 @@ export interface SiteConfig {
   telegram: string;
 }
 
+export interface HomeContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  primaryActionLabel: string;
+  primaryActionHref: string;
+  secondaryActionLabel: string;
+  secondaryActionHref: string;
+}
+
 export interface ContentItem {
   collection: 'blog' | 'cases';
   slug: string;
@@ -34,6 +44,7 @@ export interface BlogItem extends ContentItem {
 
 export interface SiteData {
   site: SiteConfig;
+  home: HomeContent;
   blog: BlogItem[];
   cases: CaseItem[];
 }

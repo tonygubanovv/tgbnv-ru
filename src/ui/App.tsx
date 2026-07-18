@@ -1,4 +1,4 @@
-import type { BlogItem, CaseItem, ContentItem, SiteData } from '../types';
+import type { CaseItem, ContentItem, SiteData } from '../types';
 
 interface AppProps {
   data: SiteData;
@@ -14,13 +14,11 @@ const nav = [
 ];
 
 export function App({ data, path }: AppProps) {
-  const route = normalizePath(path);
-
   return (
     <>
       <Header />
       <main>
-        <Route data={data} path={route} />
+        <Route data={data} path={normalizePath(path)} />
       </main>
       <Footer data={data} />
     </>
@@ -29,11 +27,11 @@ export function App({ data, path }: AppProps) {
 
 function Route({ data, path }: AppProps) {
   if (path === '/') return <Home data={data} />;
-  if (path === '/blog/') return <Listing title="Статьи" eyebrow="Блог" description="Практические материалы про аналитику, автоматизацию, AI и продуктовый подход." items={data.blog} />;
-  if (path === '/cases/') return <Listing title="Кейсы" eyebrow="Практика" description="Разборы задач, решений, результатов и выводов." items={data.cases} />;
-  if (path === '/services/') return <Services />;
-  if (path === '/career/') return <Career />;
-  if (path === '/about/') return <About />;
+  if (path === '/blog/') return <Listing title="Статьи" eyebrow="Блог" description="Материалы, заметки и разборы." items={data.blog} />;
+  if (path === '/cases/') return <Listing title="Кейсы" eyebrow="Практика" description="Разборы проектов и результатов." items={data.cases} />;
+  if (path === '/services/') return <StaticPage eyebrow="Услуги" title="Услуги" description="Здесь будут описаны направления работы." />;
+  if (path === '/career/') return <StaticPage eyebrow="Карьера" title="Карьера" description="Здесь будет карьерный профиль." />;
+  if (path === '/about/') return <StaticPage eyebrow="О себе" title="О себе" description="Здесь будет текст о тебе." />;
   if (path === '/contacts/') return <Contacts data={data} />;
 
   const blogPost = matchContent(path, '/blog/', data.blog);
@@ -42,7 +40,7 @@ function Route({ data, path }: AppProps) {
   const casePost = matchContent(path, '/cases/', data.cases);
   if (casePost) return <ContentPage item={casePost} label="Кейс" />;
 
-  return <NotFound />;
+  return <StaticPage eyebrow="404" title="Страница не найдена" description="Такого адреса на сайте нет." />;
 }
 
 function Header() {
@@ -55,14 +53,10 @@ function Header() {
         </a>
         <nav className="nav" aria-label="Основная навигация">
           {nav.map((item) => (
-            <a href={item.href} key={item.href}>
-              {item.label}
-            </a>
+            <a href={item.href} key={item.href}>{item.label}</a>
           ))}
         </nav>
-        <a className="button primary header-cta" href="/contacts/">
-          Обсудить задачу
-        </a>
+        <a className="button primary header-cta" href="/contacts/">Контакты</a>
       </div>
     </header>
   );
@@ -92,33 +86,25 @@ function Home({ data }: { data: SiteData }) {
   return (
     <>
       <section className="hero">
-        <div className="container hero-grid">
+        <div className="container hero-plain">
           <div>
-            <p className="eyebrow">AI, аналитика, автоматизация</p>
-            <h1 className="page-title">Помогаю превращать сложные процессы в понятные цифровые системы.</h1>
-            <p className="lead">Кейсы, статьи и услуги: от аналитики и продуктовой упаковки до внедрения AI-инструментов в реальные рабочие процессы.</p>
+            {data.home.eyebrow ? <p className="eyebrow">{data.home.eyebrow}</p> : null}
+            <h1 className="page-title">{data.home.title}</h1>
+            {data.home.description ? <p className="lead">{data.home.description}</p> : null}
             <div className="hero-actions">
-              <a className="button primary" href="/cases/">Смотреть кейсы</a>
-              <a className="button secondary" href="/services/">Услуги</a>
+              <a className="button primary" href={data.home.primaryActionHref}>{data.home.primaryActionLabel}</a>
+              <a className="button secondary" href={data.home.secondaryActionHref}>{data.home.secondaryActionLabel}</a>
             </div>
-          </div>
-          <div className="hero-panel" aria-label="Ключевые направления">
-            {['Кейсы вместо обещаний', 'Статьи с практикой', 'Услуги понятно'].map((title, index) => (
-              <div key={title}>
-                <span>0{index + 1}</span>
-                <strong>{title}</strong>
-                <p>{index === 0 ? 'Задача, решение, результат и выводы.' : index === 1 ? 'Материалы для сайта и Telegram.' : 'Конкретные направления и быстрый контакт.'}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
+
       <section className="section">
         <div className="container">
           <div className="section-head">
             <div>
               <p className="eyebrow">Публикации</p>
-              <h2>Свежие кейсы и статьи</h2>
+              <h2>Кейсы и статьи</h2>
             </div>
             <a className="button secondary" href="/blog/">Все статьи</a>
           </div>
@@ -201,46 +187,12 @@ function Toc({ html }: { html: string }) {
   );
 }
 
-function Services() {
-  const services = [
-    ['Аудит процессов', 'Разбор текущего процесса, узких мест и возможностей для автоматизации.'],
-    ['AI-инструменты', 'Подбор и внедрение AI-сценариев, которые помогают в реальной работе.'],
-    ['Аналитика и дашборды', 'Структура данных, понятные метрики и интерфейсы для решений.'],
-    ['Упаковка кейсов', 'Превращение опыта в ясные кейсы, статьи и публичные материалы.']
-  ];
-
-  return (
-    <section className="container section">
-      <p className="eyebrow">Услуги</p>
-      <h1 className="page-title">Несколько понятных направлений вместо списка “делаю все”.</h1>
-      <p className="lead">Базовая структура услуг. Формулировки можно уточнить после выбора аудитории и офферов.</p>
-      <div className="grid two listing">
-        {services.map(([title, text]) => (
-          <article className="card service-card" key={title}>
-            <h2>{title}</h2>
-            <p>{text}</p>
-            <a href="/contacts/">Обсудить</a>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Career() {
-  return <StaticPage eyebrow="Опыт" title="Карьера и профессиональный контекст." description="Страница под таймлайн ролей, ключевые проекты, компетенции и результаты." />;
-}
-
-function About() {
-  return <StaticPage eyebrow="О себе" title="Профессиональный профиль без лишней биографии." description="Позиционирование, опыт, сильные стороны, подход к проектам и сферы, где есть практический результат." />;
-}
-
 function Contacts({ data }: { data: SiteData }) {
   return (
     <section className="container section">
       <p className="eyebrow">Контакты</p>
-      <h1 className="page-title">Если задача уже понятна, можно сразу написать.</h1>
-      <p className="lead">На старте лучше использовать прямые контакты. Форму можно добавить позже через безопасный внешний сервис.</p>
+      <h1 className="page-title">Контакты</h1>
+      <p className="lead">Способы связи можно поменять в настройках сайта.</p>
       <div className="card contact-card">
         <a className="button primary" href={data.site.telegram} rel="noreferrer">Telegram</a>
         <a className="button secondary" href={`mailto:${data.site.email}`}>Email</a>
@@ -255,16 +207,8 @@ function StaticPage({ eyebrow, title, description }: { eyebrow: string; title: s
       <p className="eyebrow">{eyebrow}</p>
       <h1 className="page-title">{title}</h1>
       <p className="lead">{description}</p>
-      <div className="grid two listing">
-        <div className="card"><h2>Подход</h2><p>Разобраться в задаче, отделить полезное от шумного, собрать решение, которое можно поддерживать.</p></div>
-        <div className="card"><h2>Фокус</h2><p>Аналитика, автоматизация, AI-инструменты и рабочие процессы.</p></div>
-      </div>
     </section>
   );
-}
-
-function NotFound() {
-  return <StaticPage eyebrow="404" title="Страница не найдена." description="Такого адреса на сайте нет." />;
 }
 
 function normalizePath(path: string) {

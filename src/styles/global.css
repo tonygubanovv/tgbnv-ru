@@ -189,11 +189,9 @@ a:hover { color: var(--color-brand); }
 
 .hero .lead { color: rgba(255, 255, 255, 0.72); }
 
-.hero-grid {
-  align-items: center;
+.hero-plain {
   display: grid;
-  gap: 48px;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 24px;
 }
 
 .hero-actions {
@@ -201,35 +199,6 @@ a:hover { color: var(--color-brand); }
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 28px;
-}
-
-.hero-panel {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 24px;
-}
-
-.hero-panel div + div {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  margin-top: 18px;
-  padding-top: 18px;
-}
-
-.hero-panel span {
-  color: var(--color-brand-soft);
-  font-family: var(--font-code);
-  font-size: 12px;
-}
-
-.hero-panel strong {
-  display: block;
-  margin-top: 8px;
-}
-
-.hero-panel p {
-  color: rgba(255, 255, 255, 0.68);
-  margin: 8px 0 0;
 }
 
 .section-head {
@@ -442,7 +411,6 @@ a:hover { color: var(--color-brand); }
 }
 
 @media (max-width: 860px) {
-  .hero-grid { grid-template-columns: 1fr; }
   .section-head {
     align-items: flex-start;
     flex-direction: column;

@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { marked } from 'marked';
 import type { BlogItem, CaseItem, ContentItem, SiteData } from '../types';
 import { site } from './site';
+import home from './home.json';
 
 interface Frontmatter {
   title: string;
@@ -77,6 +78,7 @@ export async function loadSiteData(): Promise<SiteData> {
   const [blog, cases] = await Promise.all([readCollection('blog'), readCollection('cases')]);
   return {
     site,
+    home,
     blog: blog as BlogItem[],
     cases: cases as CaseItem[]
   };

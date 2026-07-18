@@ -36,13 +36,20 @@ function escapeJson(data: SiteData) {
   return JSON.stringify(data).replace(/</g, '\\u003c');
 }
 
+function assetPath(pathname: string, asset: string) {
+  const depth = pathname === '/' ? 0 : pathname.split('/').filter(Boolean).length;
+  const prefix = depth === 0 ? './' : '../'.repeat(depth);
+  return `${prefix}${asset}`;
+}
+
 function htmlDocument(pathname: string, appHtml: string, data: SiteData, assets: string[]) {
   const canonical = new URL(pathname, data.site.url).toString();
   const title = pageTitle(pathname, data);
   const description = pageDescription(pathname, data);
   const assetTags = assets.map((asset) => {
-    if (asset.endsWith('.css')) return `<link rel="stylesheet" href="/${asset}">`;
-    if (asset.endsWith('.js')) return `<script type="module" src="/${asset}"></script>`;
+    const href = assetPath(pathname, asset);
+    if (asset.endsWith('.css')) return `<link rel="stylesheet" href="${href}">`;
+    if (asset.endsWith('.js')) return `<script type="module" src="${href}"></script>`;
     return '';
   }).join('\n    ');
 

@@ -65,3 +65,14 @@ collections:
           - { label: Описание, name: description, widget: text }
           - { label: Email, name: email, widget: string, required: false }
           - { label: Telegram, name: telegram, widget: string, required: false }
+      - label: Главная
+        name: home
+        file: src/content/home.json
+        fields:
+          - { label: Надзаголовок, name: eyebrow, widget: string, required: false }
+          - { label: Заголовок, name: title, widget: string }
+          - { label: Описание, name: description, widget: text, required: false }
+          - { label: Текст основной кнопки, name: primaryActionLabel, widget: string }
+          - { label: Ссылка основной кнопки, name: primaryActionHref, widget: string }
+          - { label: Текст второй кнопки, name: secondaryActionLabel, widget: string }
+          - { label: Ссылка второй кнопки, name: secondaryActionHref, widget: string }
