@@ -8,9 +8,6 @@ draft: false
 telegram: false
 ---
 
-import Callout from '@components/content/Callout.astro';
-import Metric from '@components/content/Metric.astro';
-
 ## Контекст
 
 Здесь описывается ситуация: кто пришел, с какой проблемой, почему задача была важна.
@@ -19,10 +16,6 @@ import Metric from '@components/content/Metric.astro';
 
 Коротко и по делу: что было сделано, какие ограничения учитывались, почему выбран именно такой подход.
 
-<Metric value="3 блока" label="минимальная структура кейса: задача, решение, результат" />
-
 ## Результат
 
-<Callout title="Итог" tone="result">
 Кейс должен показывать измеримый или ясно сформулированный эффект.
-</Callout>

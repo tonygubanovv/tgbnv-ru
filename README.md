@@ -1,15 +1,16 @@
 # t-gubanov.ru
 
-Personal static site with content collections, Decap CMS editing, SEO defaults, and GitHub Pages deployment.
+React + TypeScript static site for GitHub Pages.
 
-## What is inside
+## Stack
 
-- Astro 7 static build
-- MDX articles and cases for reusable content blocks
+- Vite
+- React 19
+- TypeScript
+- Markdown content with frontmatter
 - Decap CMS admin at `/admin/`
-- GitHub Pages workflow in `.github/workflows/deploy.yml`
-- Custom domain placeholder in `public/CNAME`
-- SEO metadata, sitemap-friendly static routes, Open Graph defaults
+- Static HTML prerender for SEO
+- GitHub Pages deployment
 
 ## Local work
 
@@ -18,15 +19,12 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:4321`.
+Open `http://127.0.0.1:5173`.
 
-## Publishing
+## Production build
 
-Push to the `main` branch. GitHub Actions builds the site and publishes it to GitHub Pages.
+```powershell
+npm run build
+```
 
-Before production content editing, update `public/admin/config.yml`:
-
-- replace `OWNER/tgbnv-ru` with the real GitHub repository path
-- configure a Decap CMS GitHub OAuth proxy or move auth to a provider that supplies Git Gateway
-
-The site itself stays static and does not need a database or server.
+The build creates static pages in `dist/`.
