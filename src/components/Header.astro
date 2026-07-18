@@ -1,0 +1,94 @@
+---
+import { site } from '@lib/site';
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="На главную">
+      <span class="brand-mark">TG</span>
+      <span>{site.domain}</span>
+    </a>
+    <nav class="nav" aria-label="Основная навигация">
+      {site.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <a class="button primary header-cta" href="/contacts/">Обсудить задачу</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(16px);
+  }
+
+  .header-inner {
+    align-items: center;
+    display: flex;
+    gap: 24px;
+    min-height: 68px;
+  }
+
+  .brand {
+    align-items: center;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .brand-mark {
+    align-items: center;
+    background: var(--color-dark);
+    border-radius: 6px;
+    color: var(--color-inverse);
+    display: inline-flex;
+    font-size: 12px;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+  }
+
+  .nav {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .nav a {
+    border-radius: 4px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 10px;
+    text-decoration: none;
+  }
+
+  .nav a:hover {
+    background: var(--color-surface-tertiary);
+    color: var(--color-text);
+  }
+
+  @media (max-width: 820px) {
+    .header-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+      padding-block: 14px;
+    }
+
+    .nav {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .header-cta {
+      display: none;
+    }
+  }
+</style>

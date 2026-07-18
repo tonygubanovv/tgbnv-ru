@@ -1,0 +1,59 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Toc from '@components/Toc.astro';
+import { formatDate } from '@lib/content';
+
+const { entry, headings, type } = Astro.props;
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description} image={entry.data.image} type="article">
+  <article class="container article-shell">
+    <header class="article-header">
+      <p class="eyebrow">{type}</p>
+      <h1 class="page-title">{entry.data.title}</h1>
+      <p class="lead">{entry.data.description}</p>
+      <div class="article-meta">
+        <time datetime={entry.data.pubDate.toISOString()}>{formatDate(entry.data.pubDate)}</time>
+        {entry.data.telegram && <span>Готово для Telegram</span>}
+      </div>
+    </header>
+    <div class="article-grid">
+      <div class="prose">
+        <slot />
+      </div>
+      <Toc headings={headings} />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-shell {
+    padding-block: 56px;
+  }
+
+  .article-header {
+    max-width: 850px;
+  }
+
+  .article-meta {
+    color: var(--color-text-tertiary);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 13px;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .article-grid {
+    display: grid;
+    gap: 48px;
+    grid-template-columns: minmax(0, 760px) 260px;
+    margin-top: 48px;
+  }
+
+  @media (max-width: 980px) {
+    .article-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

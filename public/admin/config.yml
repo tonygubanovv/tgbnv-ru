@@ -1,0 +1,67 @@
+backend:
+  name: github
+  repo: OWNER/tgbnv-ru
+  branch: main
+  use_graphql: true
+
+local_backend: true
+publish_mode: editorial_workflow
+media_folder: public/uploads
+public_folder: /uploads
+locale: ru
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: blog
+    label: Статьи
+    folder: src/content/blog
+    create: true
+    extension: mdx
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: Заголовок, name: title, widget: string }
+      - { label: Описание для SEO, name: description, widget: text }
+      - { label: Дата, name: pubDate, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+      - { label: Обложка, name: image, widget: image, required: false }
+      - { label: Alt обложки, name: imageAlt, widget: string, required: false }
+      - { label: Теги, name: tags, widget: list, required: false }
+      - { label: Черновик, name: draft, widget: boolean, default: false }
+      - { label: Дублировать в Telegram, name: telegram, widget: boolean, default: false }
+      - { label: Текст, name: body, widget: markdown }
+
+  - name: cases
+    label: Кейсы
+    folder: src/content/cases
+    create: true
+    extension: mdx
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: Название, name: title, widget: string }
+      - { label: Кратко, name: description, widget: text }
+      - { label: Дата, name: pubDate, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+      - { label: Клиент/сфера, name: client, widget: string, required: false }
+      - { label: Результат, name: result, widget: string }
+      - { label: Обложка, name: image, widget: image, required: false }
+      - { label: Alt обложки, name: imageAlt, widget: string, required: false }
+      - { label: Теги, name: tags, widget: list, required: false }
+      - { label: Черновик, name: draft, widget: boolean, default: false }
+      - { label: Дублировать в Telegram, name: telegram, widget: boolean, default: false }
+      - { label: Текст, name: body, widget: markdown }
+
+  - name: pages
+    label: Страницы
+    files:
+      - label: Настройки сайта
+        name: site
+        file: src/content/settings/site.json
+        fields:
+          - { label: Имя, name: name, widget: string }
+          - { label: Описание, name: description, widget: text }
+          - { label: Email, name: email, widget: string, required: false }
+          - { label: Telegram, name: telegram, widget: string, required: false }

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="О себе" description="Кто такой Тони Губанов и с какими задачами помогает.">
+  <section class="container section">
+    <p class="eyebrow">О себе</p>
+    <h1 class="page-title">Профессиональный профиль без лишней биографии.</h1>
+    <p class="lead">Эта страница заготовлена под позиционирование: опыт, сильные стороны, подход к проектам и сферы, где есть практический результат.</p>
+    <div class="grid two blocks">
+      <div class="card">
+        <h2>Подход</h2>
+        <p>Разобраться в задаче, отделить полезное от шумного, собрать решение, которое можно поддерживать и развивать.</p>
+      </div>
+      <div class="card">
+        <h2>Фокус</h2>
+        <p>Аналитика, автоматизация, AI-инструменты, рабочие процессы, личные и командные системы продуктивности.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blocks {
+    margin-top: 32px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
+
+  p {
+    color: var(--color-text-muted);
+  }
+</style>

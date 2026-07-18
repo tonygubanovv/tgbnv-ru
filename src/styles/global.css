@@ -1,0 +1,215 @@
+:root {
+  --color-brand: #f35b22;
+  --color-brand-hover: #ff5e24;
+  --color-brand-soft: #ffcab5;
+  --color-purple: #a394eb;
+  --color-success: #2a7e3b;
+  --color-text: #141415;
+  --color-text-muted: #484946;
+  --color-text-tertiary: #a0a09d;
+  --color-inverse: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #fafaf8;
+  --color-surface-tertiary: #f0f0ed;
+  --color-border: #e4e5e1;
+  --color-dark: #181916;
+  --shadow-card: 0 1px 4px rgba(110, 111, 109, 0.08);
+  --shadow-button: 0 2px 1px rgba(24, 25, 22, 0.02), inset 0 -1px 0 rgba(24, 25, 22, 0.1);
+  --font-ui: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-code: "JetBrains Mono", "Courier New", monospace;
+  --container: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color: var(--color-text);
+  background: var(--color-surface);
+  font-family: var(--font-ui);
+  line-height: 1.5;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: rgba(243, 91, 34, 0.45);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--color-brand);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.container {
+  width: min(100% - 48px, var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: 56px;
+}
+
+.eyebrow {
+  color: var(--color-brand);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 12px;
+}
+
+.page-title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: 0;
+  margin: 0;
+  max-width: 900px;
+}
+
+.lead {
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 20px 0 0;
+  max-width: 760px;
+}
+
+.button {
+  align-items: center;
+  border: 1px solid var(--color-brand);
+  border-radius: 6px;
+  box-shadow: var(--shadow-button);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 8px;
+  min-height: 32px;
+  padding: 7px 14px;
+  text-decoration: none;
+}
+
+.button.primary {
+  background: var(--color-brand);
+  color: var(--color-inverse);
+}
+
+.button.secondary {
+  background: var(--color-surface);
+  color: var(--color-brand);
+}
+
+.button:hover {
+  border-color: var(--color-brand-hover);
+}
+
+.button.primary:hover {
+  background: var(--color-brand-hover);
+  color: var(--color-inverse);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.prose {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.prose h2,
+.prose h3 {
+  line-height: 1.35;
+  margin: 40px 0 12px;
+}
+
+.prose h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.prose h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  color: var(--color-text-muted);
+}
+
+.prose code {
+  background: var(--color-surface-tertiary);
+  border-radius: 4px;
+  font-family: var(--font-code);
+  font-size: 0.88em;
+  padding: 2px 5px;
+}
+
+.prose pre {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow-x: auto;
+  padding: 16px;
+}
+
+@media (max-width: 760px) {
+  .container {
+    width: min(100% - 32px, var(--container));
+  }
+
+  .section {
+    padding-block: 40px;
+  }
+
+  .grid.two,
+  .grid.three {
+    grid-template-columns: 1fr;
+  }
+
+  .lead {
+    font-size: 16px;
+  }
+}

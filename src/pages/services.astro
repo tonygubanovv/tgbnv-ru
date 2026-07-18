@@ -1,0 +1,61 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const services = [
+  {
+    title: 'Аудит процессов',
+    text: 'Разбор текущего процесса, узких мест и возможностей для автоматизации.'
+  },
+  {
+    title: 'AI-инструменты',
+    text: 'Подбор и внедрение AI-сценариев, которые помогают в реальной работе.'
+  },
+  {
+    title: 'Аналитика и дашборды',
+    text: 'Структура данных, понятные метрики и интерфейсы для решений.'
+  },
+  {
+    title: 'Упаковка кейсов',
+    text: 'Помощь с превращением опыта в ясные кейсы, статьи и публичные материалы.'
+  }
+];
+---
+
+<BaseLayout title="Услуги" description="Практические услуги: аудит, автоматизация, аналитика и AI-инструменты.">
+  <section class="container section">
+    <p class="eyebrow">Услуги</p>
+    <h1 class="page-title">Несколько понятных направлений вместо списка “делаю все”.</h1>
+    <p class="lead">Базовая структура услуг. Формулировки можно уточнить после того, как определим аудиторию и офферы.</p>
+    <div class="grid two services">
+      {services.map((service) => (
+        <article class="card service">
+          <h2>{service.title}</h2>
+          <p>{service.text}</p>
+          <a href="/contacts/">Обсудить</a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .services {
+    margin-top: 32px;
+  }
+
+  .service h2 {
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
+
+  .service p {
+    color: var(--color-text-muted);
+  }
+
+  .service a {
+    color: var(--color-brand);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+</style>

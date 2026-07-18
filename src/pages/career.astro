@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Карьера" description="Карьерный путь, роли, проекты и результаты.">
+  <section class="container section">
+    <p class="eyebrow">Опыт</p>
+    <h1 class="page-title">Карьера и профессиональный контекст.</h1>
+    <p class="lead">Страница под таймлайн ролей, ключевые проекты, компетенции и результаты. Ее удобно расширять без изменения дизайна.</p>
+    <div class="timeline">
+      {['Текущий фокус', 'Ключевые проекты', 'Опыт и роли'].map((item, index) => (
+        <div class="card timeline-item">
+          <span>0{index + 1}</span>
+          <h2>{item}</h2>
+          <p>Короткое описание блока, которое позже заменяется реальными фактами и цифрами.</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .timeline {
+    display: grid;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .timeline-item span {
+    color: var(--color-brand);
+    font-family: var(--font-code);
+    font-size: 12px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 8px 0;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>

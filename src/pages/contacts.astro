@@ -1,0 +1,25 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Контакты" description="Связаться с Тони Губановым.">
+  <section class="container section contact">
+    <p class="eyebrow">Контакты</p>
+    <h1 class="page-title">Если задача уже понятна, можно сразу написать.</h1>
+    <p class="lead">На старте лучше использовать прямые контакты. Форму можно добавить позже через безопасный внешний сервис.</p>
+    <div class="card contact-card">
+      <a class="button primary" href="https://t.me/" rel="noreferrer">Telegram</a>
+      <a class="button secondary" href="mailto:hello@t-gubanov.ru">Email</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+    max-width: 520px;
+  }
+</style>

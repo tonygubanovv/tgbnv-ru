@@ -1,0 +1,78 @@
+---
+import { formatDate } from '@lib/content';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date?: Date;
+  result?: string;
+  tags?: string[];
+}
+
+const { href, title, description, date, result, tags = [] } = Astro.props;
+---
+
+<article class="card entry-card">
+  <div class="card-meta">
+    {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
+    {result && <span>{result}</span>}
+  </div>
+  <h2><a href={href}>{title}</a></h2>
+  <p>{description}</p>
+  {tags.length > 0 && (
+    <div class="tags">
+      {tags.map((tag) => <span>{tag}</span>)}
+    </div>
+  )}
+</article>
+
+<style>
+  .entry-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+  }
+
+  .card-meta {
+    color: var(--color-text-tertiary);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12px;
+    font-weight: 500;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  h2 a {
+    text-decoration: none;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    margin: 12px 0 0;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .tags span {
+    background: var(--color-surface-tertiary);
+    border-radius: 4px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+  }
+</style>

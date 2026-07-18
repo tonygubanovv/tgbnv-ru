@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Card from '@components/Card.astro';
+import { getCollection } from 'astro:content';
+import { byDateDesc, entrySlug, visibleEntry } from '@lib/content';
+
+const posts = (await getCollection('blog')).filter(visibleEntry).sort(byDateDesc);
+---
+
+<BaseLayout title="Статьи" description="Практические статьи про аналитику, автоматизацию, AI и продуктовый подход.">
+  <section class="container section">
+    <p class="eyebrow">Блог</p>
+    <h1 class="page-title">Статьи</h1>
+    <p class="lead">Короткие и практичные материалы, которые можно развивать в Telegram и собирать в базу знаний.</p>
+    <div class="grid three listing">
+      {posts.map((post) => (
+        <Card href={`/blog/${entrySlug(post)}/`} title={post.data.title} description={post.data.description} date={post.data.pubDate} tags={post.data.tags} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .listing {
+    margin-top: 32px;
+  }
+</style>
