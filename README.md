@@ -7,7 +7,7 @@ React + TypeScript static site for GitHub Pages.
 - Vite
 - React 19
 - TypeScript
-- Static HTML prerender for SEO
+- Static HTML generation on build
 - GitHub Pages deployment
 
 ## Local work
@@ -27,14 +27,21 @@ npm run build
 
 The build creates static pages in `dist/`.
 
-## Editing
+## Project Structure
 
-Edit page content directly in React/TypeScript:
+- `src/app/` - app entry and route list.
+- `src/pages/` - pages where sections are connected.
+- `src/sections/` - large page sections with editable content.
+- `src/components/` - reusable layout and UI components.
+- `src/config/site.ts` - site name, contacts, navigation.
+- `src/styles/` - separated CSS files.
+- `src/injections/head.html` - global HTML before `</head>`.
+- `src/injections/body-start.html` - global HTML right after `<body>`.
 
-- `src/ui/App.tsx` for page layout and visible text
-- `src/content/site.ts` for site metadata, contacts, and navigation
+## Editing Content
 
-## Global HTML Inserts
+Main page content lives in `src/sections/home/`.
 
-- `src/injections/head.html` is inserted before `</head>` on every page.
-- `src/injections/body-start.html` is inserted right after `<body>` on every page.
+Services page content lives in `src/pages/ServicesPage.tsx` and `src/sections/services/ServicesListSection.tsx`.
+
+There is no blog, admin panel, Markdown, JSON content, RSS, robots file, sitemap, or Open Graph image in the current base.

@@ -1,0 +1,50 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  line-height: 1.5;
+  text-size-adjust: 100%;
+}
+
+body {
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    var(--color-surface);
+  background-position: center top;
+  background-size: 100% 176px, 280px 100%;
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: rgba(243, 91, 34, 0.45);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--color-brand);
+}
+
+:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-brand-soft);
+  color: var(--color-text);
+}
