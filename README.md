@@ -7,8 +7,6 @@ React + TypeScript static site for GitHub Pages.
 - Vite
 - React 19
 - TypeScript
-- Markdown content with frontmatter
-- Decap CMS admin at `/admin/`
 - Static HTML prerender for SEO
 - GitHub Pages deployment
 
@@ -28,3 +26,15 @@ npm run build
 ```
 
 The build creates static pages in `dist/`.
+
+## Editing
+
+Edit page content directly in React/TypeScript:
+
+- `src/ui/App.tsx` for page layout and visible text
+- `src/content/site.ts` for site metadata, contacts, and navigation
+
+## Global HTML Inserts
+
+- `src/injections/head.html` is inserted before `</head>` on every page.
+- `src/injections/body-start.html` is inserted right after `<body>` on every page.

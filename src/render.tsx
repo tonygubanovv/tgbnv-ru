@@ -1,7 +1,6 @@
 import { renderToString } from 'react-dom/server';
-import { App } from './ui/App';
-import type { SiteData } from './types';
+import { App } from './app/App';
 
-export function render(path: string, data: SiteData) {
-  return renderToString(<App data={data} path={path} />);
+export function render(path: string) {
+  return renderToString(<App path={path} />);
 }
