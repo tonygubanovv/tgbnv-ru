@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Gubanov Anton">
+  <rect width="128" height="128" rx="28" fill="#181916"/>
+  <path d="M34 80.5V47.5h60" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M94 47.5v33H58" fill="none" stroke="#f0522a" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="34" cy="80.5" r="7" fill="#f0522a"/>
+  <circle cx="94" cy="47.5" r="7" fill="#ffffff"/>
+</svg>

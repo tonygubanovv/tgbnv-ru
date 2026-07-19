@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pageDescription, pageRoutes, pageTitle } from '../src/app/routes';
-import { site } from '../src/config/site';
 import { render } from '../src/render';
 
 const distDir = path.join(process.cwd(), 'dist');
@@ -34,7 +33,7 @@ function htmlDocument(pathname: string, appHtml: string, assets: string[], injec
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
-    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
     <meta name="description" content="${description}">
     ${assetTags}
     ${injections.head}
@@ -81,30 +80,11 @@ async function writePage(pathname: string, assets: string[], injections: HtmlInj
   await fs.writeFile(outputPath, htmlDocument(pathname, render(pathname), assets, injections), 'utf8');
 }
 
-function sitemapPath(pathname: string) {
-  return `${site.url}${pathname === '/' ? '/' : pathname}`;
-}
-
-async function writeSitemap() {
-  const urls = pageRoutes.map((route) => `  <url>
-    <loc>${sitemapPath(route)}</loc>
-  </url>`).join('\n');
-
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
-</urlset>
-`;
-
-  await fs.writeFile(path.join(distDir, 'sitemap.xml'), sitemap, 'utf8');
-}
-
 async function main() {
   const assets = await getAssets();
   const injections = await readInjections();
 
   await Promise.all(pageRoutes.map((route) => writePage(route, assets, injections)));
-  await writeSitemap();
 }
 
 await main();

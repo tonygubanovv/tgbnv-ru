@@ -99,25 +99,15 @@
 }
 
 .brand-mark {
-  align-items: center;
-  background: var(--color-dark);
-  border: 1px solid rgba(20, 20, 21, 0.12);
   border-radius: 7px;
-  color: var(--color-inverse);
-  display: inline-flex;
-  font-size: 10px;
-  font-weight: 800;
   height: 24px;
-  justify-content: center;
-  letter-spacing: 0;
-  line-height: 1;
-  transition: background-color 140ms ease, border-color 140ms ease;
+  object-fit: contain;
+  transition: filter 140ms ease;
   width: 24px;
 }
 
 .brand:hover .brand-mark {
-  background: var(--color-text);
-  border-color: var(--color-text);
+  filter: brightness(1.08);
 }
 
 .nav {

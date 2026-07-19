@@ -2,7 +2,7 @@ import { Footer } from '../components/layout/Footer';
 import { Header } from '../components/layout/Header';
 import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
-import { ServicesPage } from '../pages/ServicesPage';
+import { ResumePage } from '../pages/ResumePage';
 import { normalizePath } from './routes';
 
 interface AppProps {
@@ -25,7 +25,7 @@ export function App({ path }: AppProps) {
 
 function Route({ path }: { path: string }) {
   if (path === '/') return <HomePage route={path} />;
-  if (path === '/services/') return <ServicesPage />;
+  if (path === '/resume/') return <ResumePage />;
 
   return <NotFoundPage />;
 }

@@ -1,4 +1,5 @@
 import { site } from '../../config/site';
+import { externalLinkProps } from '../../lib/externalLink';
 import { relativeHref } from '../../lib/relativeHref';
 import { typographText as tx } from '../../lib/typograph';
 
@@ -16,8 +17,9 @@ export function Footer({ route }: FooterProps) {
         </div>
 
         <div className="footer-links">
-          <a href={relativeHref(route, '/services/')}>{tx('Услуги')}</a>
-          <a href={site.telegram} rel="noreferrer">Telegram</a>
+          <a href={relativeHref(route, '/resume/')}>{tx('Резюме')}</a>
+          <a href={site.telegram} {...externalLinkProps(site.telegram)}>Telegram</a>
+          <a href={site.contactTelegram} {...externalLinkProps(site.contactTelegram)}>{tx('Написать')}</a>
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </div>
       </div>

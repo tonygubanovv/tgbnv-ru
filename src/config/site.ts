@@ -7,6 +7,9 @@ export interface SiteConfig {
   description: string;
   email: string;
   telegram: string;
+  contactTelegram: string;
+  telegramTitle: string;
+  telegramDescription: string;
 }
 
 export interface NavItem {
@@ -15,15 +18,18 @@ export interface NavItem {
 }
 
 export const site: SiteConfig = {
-  name: 'Tony Gubanov',
+  name: 'Губанов Антон',
   domain: 't-gubanov.ru',
   url: 'https://t-gubanov.ru',
-  description: tx('Личный сайт о digital-маркетинге, сайтах, аналитике и работе со сложными B2B-продуктами.'),
+  description: tx('Digital-маркетолог в B2B и кибербезе: сайт, контент, SEO, аналитика, воронка и понятная упаковка сложных продуктов.'),
   email: 'tonygubanovv@yandex.ru',
-  telegram: 'https://t.me/tonygubanovv'
+  telegram: 'https://t.me/+FYu_-k3qpokwODg6',
+  contactTelegram: 'https://t.me/tonygubanovv',
+  telegramTitle: tx('Digital-маркетолог | Губанов Антон'),
+  telegramDescription: tx('Дневник B2B-маркетолога в кибербезе. Мысли, кейсы, практика.')
 };
 
 export const navItems: NavItem[] = [
   { href: '/', label: tx('Главная') },
-  { href: '/services/', label: tx('Услуги') }
+  { href: '/resume/', label: tx('Резюме') }
 ];

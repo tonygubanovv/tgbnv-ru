@@ -14,32 +14,31 @@ export function HeroSection({ route }: HeroSectionProps) {
         <div className="hero-copy">
           <p className="eyebrow">{tx('Личный сайт')}</p>
           <h1 className="page-title">
-            {tx('О маркетинге, сайтах и аналитике сложных')} <span className="hero-title-accent">B2B-продуктов</span>
+            {tx('Digital-маркетинг для сложных')} <span className="hero-title-accent">B2B-продуктов</span>
           </h1>
           <p className="lead">
-            {tx('Здесь собираю опыт, рабочие заметки и подход к задачам, где нужно понятнее объяснить продукт, улучшить сайт и разобраться в данных.')}
+            {tx('Помогаю превращать технически сложные продукты в понятные страницы, контент, воронки и решения на данных. Основной контекст — B2B и кибербезопасность.')}
           </p>
           <div className="hero-actions">
-            <ButtonLink href={relativeHref(route, '/services/')}>{tx('Услуги')}</ButtonLink>
-            <ButtonLink href={site.telegram} tone="secondary">Telegram</ButtonLink>
+            <ButtonLink href={relativeHref(route, '/resume/')}>{tx('Резюме')}</ButtonLink>
+            <ButtonLink href={site.telegram} tone="secondary">{tx('Telegram-канал')}</ButtonLink>
           </div>
         </div>
 
-        <aside className="hero-note" aria-label={tx('Коротко')}>
-          <p className="hero-note-label">{tx('Коротко')}</p>
+        <aside className="hero-note" aria-label={tx('Профессиональный профиль')}>
           <dl>
             <div>
               <dt>{tx('Фокус')}</dt>
-              <dd>{tx('B2B-маркетинг, сайты, SEO, аналитика и ИИ-видимость.')}</dd>
+              <dd>{tx('B2B-маркетинг, сайты, SEO, аналитика, рекламные каналы и коммуникации для кибербеза.')}</dd>
             </div>
             <div>
-              <dt>{tx('Интерес')}</dt>
-              <dd>{tx('Как сложные продукты становятся понятнее для клиентов, команды и рынка.')}</dd>
+              <dt>{tx('Telegram-канал')}</dt>
+              <dd>{site.telegramDescription}</dd>
             </div>
             <div>
-              <dt>{tx('Связаться')}</dt>
+              <dt>{tx('Ссылка')}</dt>
               <dd>
-                <a href={site.telegram} rel="noreferrer">Telegram</a>
+                <a href={site.telegram} target="_blank" rel="noreferrer">{site.telegramTitle}</a>
               </dd>
             </div>
           </dl>

@@ -8,9 +8,9 @@ export function TelegramSection() {
       <div className="container telegram-band">
         <div>
           <p className="eyebrow">Telegram-канал</p>
-          <h2>{tx('Канал с короткими заметками и наблюдениями')}</h2>
+          <h2>{site.telegramTitle}</h2>
           <p>
-            {tx('Туда удобно выносить мысли, которые еще не стали большими статьями: разборы интерфейсов, заметки про аналитику, SEO, ИИ-видимость и понятность B2B-продуктов.')}
+            {site.telegramDescription}
           </p>
         </div>
 

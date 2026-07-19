@@ -100,6 +100,11 @@
   padding-top: 14px;
 }
 
+.hero-note div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
 .hero-note dt {
   color: var(--color-text);
   font-size: 14px;
@@ -207,6 +212,131 @@
   padding: 22px;
 }
 
+.resume-highlight-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.resume-highlight {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  min-height: 128px;
+  padding: 18px;
+}
+
+.resume-highlight span,
+.resume-period {
+  color: var(--color-brand);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.resume-highlight p {
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 23px;
+  margin: 22px 0 0;
+}
+
+.resume-hero {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.resume-layout {
+  align-items: start;
+  display: grid;
+  gap: 42px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.resume-main h2,
+.resume-aside h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  margin: 0 0 20px;
+}
+
+.resume-aside h2:not(:first-child) {
+  margin-top: 34px;
+}
+
+.resume-timeline {
+  display: grid;
+  gap: 16px;
+}
+
+.resume-entry {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+}
+
+.resume-period {
+  margin: 0 0 10px;
+}
+
+.resume-company {
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 26px;
+  margin: 0 0 2px;
+}
+
+.resume-entry h3 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 25px;
+  margin: 0 0 10px;
+}
+
+.resume-entry p:not(.resume-period):not(.resume-company),
+.resume-list {
+  color: var(--color-text-muted);
+  font-size: 15px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.resume-aside {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+}
+
+.resume-list {
+  display: grid;
+  gap: 10px;
+  padding-left: 18px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tags span {
+  background: var(--color-brand-tint);
+  border: 1px solid var(--color-warm-border);
+  border-radius: 999px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  padding: 6px 10px;
+}
+
 .contact-section {
   background: var(--color-page);
 }
@@ -280,6 +410,13 @@
     max-width: 520px;
   }
 
+  .resume-highlight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resume-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 639px) {
@@ -308,6 +445,10 @@
   .contact-band {
     grid-template-columns: 1fr;
     padding: 24px;
+  }
+
+  .resume-highlight-grid {
+    grid-template-columns: 1fr;
   }
 
   .telegram-section {

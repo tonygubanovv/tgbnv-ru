@@ -3,7 +3,7 @@ import { CasesPlaceholderSection } from '../sections/home/CasesPlaceholderSectio
 import { ContactSection } from '../sections/home/ContactSection';
 import { HeroSection } from '../sections/home/HeroSection';
 import { IntroSection } from '../sections/home/IntroSection';
-import { ServicesPreviewSection } from '../sections/home/ServicesPreviewSection';
+import { ResumePreviewSection } from '../sections/home/ResumePreviewSection';
 import { TelegramSection } from '../sections/home/TelegramSection';
 
 interface HomePageProps {
@@ -15,7 +15,7 @@ export function HomePage({ route }: HomePageProps) {
     <>
       <HeroSection route={route} />
       <IntroSection />
-      <ServicesPreviewSection route={route} />
+      <ResumePreviewSection route={route} />
       <ApproachSection />
       <CasesPlaceholderSection />
       <TelegramSection />

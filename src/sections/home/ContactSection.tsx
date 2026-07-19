@@ -15,7 +15,7 @@ export function ContactSection() {
         </div>
 
         <div className="contact-actions">
-          <ButtonLink href={site.telegram}>Telegram</ButtonLink>
+          <ButtonLink href={site.contactTelegram}>Telegram</ButtonLink>
           <ButtonLink href={`mailto:${site.email}`} tone="secondary">{site.email}</ButtonLink>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { navItems, site } from '../../config/site';
+import { externalLinkProps } from '../../lib/externalLink';
 import { relativeHref } from '../../lib/relativeHref';
 import { typographText as tx } from '../../lib/typograph';
 
@@ -11,7 +12,7 @@ export function Header({ route }: HeaderProps) {
     <header className="site-header">
       <div className="container header-inner">
         <a className="brand" href={relativeHref(route, '/')} aria-label={tx('На главную')}>
-          <span className="brand-mark">TG</span>
+          <img className="brand-mark" src={relativeHref(route, '/logo.svg')} alt="" aria-hidden="true" />
           <span>{site.domain}</span>
         </a>
 
@@ -23,8 +24,8 @@ export function Header({ route }: HeaderProps) {
           ))}
         </nav>
 
-        <a className="button primary header-cta" href={site.telegram} rel="noreferrer">
-          Telegram
+        <a className="button primary header-cta" href={site.telegram} {...externalLinkProps(site.telegram)}>
+          {tx('Канал')}
         </a>
       </div>
     </header>
