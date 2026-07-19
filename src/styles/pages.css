@@ -1,11 +1,11 @@
 .eyebrow {
   color: var(--color-text-tertiary);
   font-family: var(--font-ui);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0;
-  line-height: 16px;
-  margin: 0 0 14px;
+  line-height: 14px;
+  margin: 0 0 10px;
   text-transform: uppercase;
 }
 
@@ -23,7 +23,7 @@
   color: var(--color-text-muted);
   font-size: 18px;
   font-weight: 400;
-  line-height: 29px;
+  line-height: 30px;
   margin: 22px 0 0;
   max-width: 700px;
 }
@@ -181,7 +181,7 @@
   margin-top: 24px;
 }
 
-.section-action a {
+.section-action a:not(.button) {
   border-radius: 6px;
   color: var(--color-brand);
   display: inline-flex;
@@ -193,14 +193,14 @@
   transition: color 140ms ease, text-decoration-color 140ms ease;
 }
 
-.section-action a:hover {
+.section-action a:not(.button):hover {
   color: var(--color-brand-hover);
   text-decoration: underline;
   text-decoration-color: var(--color-brand-hover);
   text-underline-offset: 3px;
 }
 
-.section-action a:active {
+.section-action a:not(.button):active {
   color: var(--color-brand-active);
 }
 
@@ -223,8 +223,8 @@
   border: 1px solid var(--color-border);
   border-radius: 10px;
   box-shadow: var(--shadow-card);
-  min-height: 128px;
-  padding: 18px;
+  min-height: 144px;
+  padding: 20px;
 }
 
 .resume-highlight span,
@@ -238,9 +238,9 @@
 .resume-highlight p {
   color: var(--color-text);
   font-size: 15px;
-  font-weight: 650;
-  line-height: 23px;
-  margin: 22px 0 0;
+  font-weight: 600;
+  line-height: 24px;
+  margin: 24px 0 0;
 }
 
 .resume-hero {
@@ -348,9 +348,22 @@
   border-radius: 14px;
   box-shadow: var(--shadow-card);
   display: grid;
-  gap: 32px;
-  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-  padding: 30px 32px;
+  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 146px;
+  padding: 26px 30px;
+}
+
+.contact-band .eyebrow {
+  margin-bottom: 6px;
+}
+
+.contact-band h2 {
+  margin-bottom: 6px;
+}
+
+.contact-band p:not(.eyebrow) {
+  max-width: 620px;
 }
 
 .projects-section {
@@ -398,6 +411,7 @@
   flex-wrap: wrap;
   gap: 12px;
   justify-content: flex-end;
+  min-width: 276px;
 }
 
 @media (max-width: 980px) {
@@ -444,6 +458,7 @@
 
   .contact-band {
     grid-template-columns: 1fr;
+    min-height: 0;
     padding: 24px;
   }
 
@@ -465,5 +480,6 @@
 
   .contact-actions {
     justify-content: flex-start;
+    min-width: 0;
   }
 }

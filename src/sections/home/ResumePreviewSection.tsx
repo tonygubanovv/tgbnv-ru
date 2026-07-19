@@ -14,7 +14,7 @@ export function ResumePreviewSection({ route }: ResumePreviewSectionProps) {
       <div className="container">
         <SectionHeader
           eyebrow={tx('Резюме')}
-          title={tx('Профессиональный профиль вместо витрины услуг')}
+          title={tx('Опыт, результаты и рабочий контекст')}
           description={resumeSummary}
         />
 
@@ -28,7 +28,7 @@ export function ResumePreviewSection({ route }: ResumePreviewSectionProps) {
         </div>
 
         <div className="section-action">
-          <ButtonLink href={relativeHref(route, '/resume/')} tone="secondary">{tx('Открыть резюме')}</ButtonLink>
+          <ButtonLink href={relativeHref(route, '/resume/')} tone="secondary">{tx('Смотреть резюме')}</ButtonLink>
         </div>
       </div>
     </section>

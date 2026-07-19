@@ -1,6 +1,6 @@
 import { typographText as tx } from '../lib/typograph';
 
-export const resumeSummary = tx('Digital-маркетолог с опытом 4+ года. Работаю с B2B-продуктами, кибербезопасностью, performance-маркетингом, сайтами, SEO, аналитикой, CRM и контентом для продаж.');
+export const resumeSummary = tx('Digital-маркетолог с опытом 4+ года. Работаю с B2B-продуктами, кибербезопасностью, performance-маркетингом, сайтами, SEO, аналитикой, CRM и контентом.');
 
 export const resumeHighlights = [
   tx('Снижал CPL с 5-6 тыс. рублей до 1100 рублей в среднем'),

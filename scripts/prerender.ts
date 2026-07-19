@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { pageDescription, pageRoutes, pageTitle } from '../src/app/routes';
+import { getPageMeta, pageRoutes } from '../src/app/routes';
+import { metaTags } from '../src/lib/headMeta';
 import { render } from '../src/render';
 
 const distDir = path.join(process.cwd(), 'dist');
@@ -18,8 +19,7 @@ function assetPath(pathname: string, asset: string) {
 }
 
 function htmlDocument(pathname: string, appHtml: string, assets: string[], injections: HtmlInjections) {
-  const title = pageTitle(pathname);
-  const description = pageDescription();
+  const meta = getPageMeta(pathname);
   const assetTags = assets.map((asset) => {
     const href = assetPath(pathname, asset);
     if (asset.endsWith('.css')) return `<link rel="stylesheet" href="${href}">`;
@@ -32,9 +32,7 @@ function htmlDocument(pathname: string, appHtml: string, assets: string[], injec
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-    <meta name="description" content="${description}">
+    ${metaTags(meta)}
     ${assetTags}
     ${injections.head}
   </head>

@@ -19,7 +19,7 @@ export function ResumePage() {
       <section className="section">
         <div className="container resume-layout">
           <div className="resume-main">
-            <h2>{tx('Опыт и фокус')}</h2>
+            <h2>{tx('Опыт')}</h2>
             <div className="resume-timeline">
               {resumeExperience.map((item) => (
                 <article className="resume-entry" key={`${item.company}-${item.period}`}>

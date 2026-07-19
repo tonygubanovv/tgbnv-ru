@@ -12,12 +12,12 @@ export function HeroSection({ route }: HeroSectionProps) {
     <section className="hero">
       <div className="container hero-inner hero-inner-simple">
         <div className="hero-copy">
-          <p className="eyebrow">{tx('Личный сайт')}</p>
+          <p className="eyebrow">{tx('Личная страница')}</p>
           <h1 className="page-title">
-            {tx('Digital-маркетинг для сложных')} <span className="hero-title-accent">B2B-продуктов</span>
+            {tx('Губанов Антон,')} <span className="hero-title-accent">digital-маркетолог</span>
           </h1>
           <p className="lead">
-            {tx('Помогаю превращать технически сложные продукты в понятные страницы, контент, воронки и решения на данных. Основной контекст — B2B и кибербезопасность.')}
+            {tx('Здесь собраны мой профессиональный профиль, резюме и заметки о B2B-маркетинге, кибербезопасности, сайтах, SEO, аналитике и работе со сложными продуктами.')}
           </p>
           <div className="hero-actions">
             <ButtonLink href={relativeHref(route, '/resume/')}>{tx('Резюме')}</ButtonLink>
@@ -25,11 +25,11 @@ export function HeroSection({ route }: HeroSectionProps) {
           </div>
         </div>
 
-        <aside className="hero-note" aria-label={tx('Профессиональный профиль')}>
+        <aside className="hero-note" aria-label={tx('О странице')}>
           <dl>
             <div>
-              <dt>{tx('Фокус')}</dt>
-              <dd>{tx('B2B-маркетинг, сайты, SEO, аналитика, рекламные каналы и коммуникации для кибербеза.')}</dd>
+              <dt>{tx('Профиль')}</dt>
+              <dd>{tx('Digital-маркетинг, B2B, кибербезопасность, сайты, SEO, аналитика и рекламные каналы.')}</dd>
             </div>
             <div>
               <dt>{tx('Telegram-канал')}</dt>

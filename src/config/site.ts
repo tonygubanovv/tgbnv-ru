@@ -21,7 +21,7 @@ export const site: SiteConfig = {
   name: 'Губанов Антон',
   domain: 't-gubanov.ru',
   url: 'https://t-gubanov.ru',
-  description: tx('Digital-маркетолог в B2B и кибербезе: сайт, контент, SEO, аналитика, воронка и понятная упаковка сложных продуктов.'),
+  description: tx('Личная страница Губанова Антона: digital-маркетинг, B2B, кибербезопасность, сайты, SEO, аналитика, опыт и заметки.'),
   email: 'tonygubanovv@yandex.ru',
   telegram: 'https://t.me/+FYu_-k3qpokwODg6',
   contactTelegram: 'https://t.me/tonygubanovv',
