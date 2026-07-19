@@ -1,13 +1,13 @@
 backend:
   name: github
-  repo: OWNER/tgbnv-ru
+  repo: tonygubanovv/tgbnv-ru
   branch: main
   use_graphql: true
 
 local_backend: true
 publish_mode: editorial_workflow
 media_folder: public/uploads
-public_folder: /uploads
+public_folder: /tgbnv-ru/uploads
 locale: ru
 
 slug:
@@ -62,6 +62,9 @@ collections:
         file: src/content/settings/site.json
         fields:
           - { label: Имя, name: name, widget: string }
+          - { label: Домен, name: domain, widget: string }
+          - { label: URL сайта, name: url, widget: string }
+          - { label: Базовый путь, name: basePath, widget: string }
           - { label: Описание, name: description, widget: text }
           - { label: Email, name: email, widget: string, required: false }
           - { label: Telegram, name: telegram, widget: string, required: false }

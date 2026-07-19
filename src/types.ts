@@ -2,6 +2,7 @@ export interface SiteConfig {
   name: string;
   domain: string;
   url: string;
+  basePath: string;
   description: string;
   email: string;
   telegram: string;

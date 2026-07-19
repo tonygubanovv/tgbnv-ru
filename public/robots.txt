@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://t-gubanov.ru/sitemap.xml
+Sitemap: https://tonygubanovv.github.io/tgbnv-ru/sitemap.xml

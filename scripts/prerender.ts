@@ -27,6 +27,12 @@ function pageDescription(pathname: string, data: SiteData) {
   return findContent(pathname, data)?.description ?? data.site.description;
 }
 
+function publicUrl(pathname: string, data: SiteData) {
+  const baseUrl = data.site.url.replace(/\/$/, '');
+  const pathPart = pathname === '/' ? '/' : pathname;
+  return `${baseUrl}${pathPart}`;
+}
+
 function findContent(pathname: string, data: SiteData): ContentItem | undefined {
   const all = [...data.blog, ...data.cases];
   return all.find((item) => pathname === `/${item.collection}/${item.slug}/`);
@@ -43,7 +49,7 @@ function assetPath(pathname: string, asset: string) {
 }
 
 function htmlDocument(pathname: string, appHtml: string, data: SiteData, assets: string[]) {
-  const canonical = new URL(pathname, data.site.url).toString();
+  const canonical = publicUrl(pathname, data);
   const title = pageTitle(pathname, data);
   const description = pageDescription(pathname, data);
   const assetTags = assets.map((asset) => {
@@ -66,7 +72,7 @@ function htmlDocument(pathname: string, appHtml: string, data: SiteData, assets:
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
     <meta property="og:url" content="${canonical}">
-    <meta property="og:image" content="${data.site.url}/og-default.svg">
+    <meta property="og:image" content="${publicUrl('/og-default.svg', data)}">
     <meta name="twitter:card" content="summary_large_image">
     ${assetTags}
   </head>
@@ -113,11 +119,11 @@ async function main() {
 
   await Promise.all(routes.map((route) => writePage(route, data, assets)));
 
-  const sitemap = routes.map((route) => `<url><loc>${new URL(route, data.site.url)}</loc></url>`).join('');
+  const sitemap = routes.map((route) => `<url><loc>${publicUrl(route, data)}</loc></url>`).join('');
   await writeTextFile('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemap}</urlset>`);
 
   const rss = data.blog.map((item) => {
-    const url = `${data.site.url}/blog/${item.slug}/`;
+    const url = publicUrl(`/blog/${item.slug}/`, data);
     return `<item><title><![CDATA[${item.title}]]></title><description><![CDATA[${item.description}]]></description><link>${url}</link><guid>${url}</guid><pubDate>${new Date(item.pubDate).toUTCString()}</pubDate></item>`;
   }).join('');
   await writeTextFile('rss.xml', `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>${data.site.name}</title><description>${data.site.description}</description><link>${data.site.url}</link>${rss}</channel></rss>`);

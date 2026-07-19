@@ -14,11 +14,13 @@ const nav = [
 ];
 
 export function App({ data, path }: AppProps) {
+  const route = normalizePath(stripBasePath(path, data.site.basePath));
+
   return (
     <>
-      <Header />
+      <Header data={data} />
       <main>
-        <Route data={data} path={normalizePath(path)} />
+        <Route data={data} path={route} />
       </main>
       <Footer data={data} />
     </>
@@ -27,8 +29,8 @@ export function App({ data, path }: AppProps) {
 
 function Route({ data, path }: AppProps) {
   if (path === '/') return <Home data={data} />;
-  if (path === '/blog/') return <Listing title="Статьи" eyebrow="Блог" description="Материалы, заметки и разборы." items={data.blog} />;
-  if (path === '/cases/') return <Listing title="Кейсы" eyebrow="Практика" description="Разборы проектов и результатов." items={data.cases} />;
+  if (path === '/blog/') return <Listing title="Статьи" eyebrow="Блог" description="Материалы, заметки и разборы." items={data.blog} data={data} />;
+  if (path === '/cases/') return <Listing title="Кейсы" eyebrow="Практика" description="Разборы проектов и результатов." items={data.cases} data={data} />;
   if (path === '/services/') return <StaticPage eyebrow="Услуги" title="Услуги" description="Здесь будут описаны направления работы." />;
   if (path === '/career/') return <StaticPage eyebrow="Карьера" title="Карьера" description="Здесь будет карьерный профиль." />;
   if (path === '/about/') return <StaticPage eyebrow="О себе" title="О себе" description="Здесь будет текст о тебе." />;
@@ -43,20 +45,20 @@ function Route({ data, path }: AppProps) {
   return <StaticPage eyebrow="404" title="Страница не найдена" description="Такого адреса на сайте нет." />;
 }
 
-function Header() {
+function Header({ data }: { data: SiteData }) {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <a className="brand" href="/" aria-label="На главную">
+        <a className="brand" href={withBase(data, '/')} aria-label="На главную">
           <span className="brand-mark">TG</span>
-          <span>t-gubanov.ru</span>
+          <span>{data.site.domain}</span>
         </a>
         <nav className="nav" aria-label="Основная навигация">
           {nav.map((item) => (
-            <a href={item.href} key={item.href}>{item.label}</a>
+            <a href={withBase(data, item.href)} key={item.href}>{item.label}</a>
           ))}
         </nav>
-        <a className="button primary header-cta" href="/contacts/">Контакты</a>
+        <a className="button primary header-cta" href={withBase(data, '/contacts/')}>Контакты</a>
       </div>
     </header>
   );
@@ -71,9 +73,9 @@ function Footer({ data }: { data: SiteData }) {
           <p className="footer-text">{data.site.description}</p>
         </div>
         <div className="footer-links">
-          <a href="/admin/">Редактор</a>
-          <a href="/rss.xml">RSS</a>
-          <a href="/contacts/">Контакты</a>
+          <a href={withBase(data, '/admin/')}>Редактор</a>
+          <a href={withBase(data, '/rss.xml')}>RSS</a>
+          <a href={withBase(data, '/contacts/')}>Контакты</a>
         </div>
       </div>
     </footer>
@@ -92,8 +94,8 @@ function Home({ data }: { data: SiteData }) {
             <h1 className="page-title">{data.home.title}</h1>
             {data.home.description ? <p className="lead">{data.home.description}</p> : null}
             <div className="hero-actions">
-              <a className="button primary" href={data.home.primaryActionHref}>{data.home.primaryActionLabel}</a>
-              <a className="button secondary" href={data.home.secondaryActionHref}>{data.home.secondaryActionLabel}</a>
+              <a className="button primary" href={withBase(data, data.home.primaryActionHref)}>{data.home.primaryActionLabel}</a>
+              <a className="button secondary" href={withBase(data, data.home.secondaryActionHref)}>{data.home.secondaryActionLabel}</a>
             </div>
           </div>
         </div>
@@ -106,10 +108,10 @@ function Home({ data }: { data: SiteData }) {
               <p className="eyebrow">Публикации</p>
               <h2>Кейсы и статьи</h2>
             </div>
-            <a className="button secondary" href="/blog/">Все статьи</a>
+            <a className="button secondary" href={withBase(data, '/blog/')}>Все статьи</a>
           </div>
           <div className="grid three">
-            {featured.map((item) => <EntryCard item={item} key={`${item.collection}-${item.slug}`} />)}
+            {featured.map((item) => <EntryCard item={item} data={data} key={`${item.collection}-${item.slug}`} />)}
           </div>
         </div>
       </section>
@@ -117,27 +119,27 @@ function Home({ data }: { data: SiteData }) {
   );
 }
 
-function Listing({ title, eyebrow, description, items }: { title: string; eyebrow: string; description: string; items: ContentItem[] }) {
+function Listing({ title, eyebrow, description, items, data }: { title: string; eyebrow: string; description: string; items: ContentItem[]; data: SiteData }) {
   return (
     <section className="container section">
       <p className="eyebrow">{eyebrow}</p>
       <h1 className="page-title">{title}</h1>
       <p className="lead">{description}</p>
       <div className="grid three listing">
-        {items.map((item) => <EntryCard item={item} key={`${item.collection}-${item.slug}`} />)}
+        {items.map((item) => <EntryCard item={item} data={data} key={`${item.collection}-${item.slug}`} />)}
       </div>
     </section>
   );
 }
 
-function EntryCard({ item }: { item: ContentItem }) {
+function EntryCard({ item, data }: { item: ContentItem; data: SiteData }) {
   return (
     <article className="card entry-card">
       <div className="card-meta">
         <time dateTime={item.pubDate}>{formatDate(item.pubDate)}</time>
         {isCaseItem(item) && item.result ? <span>{item.result}</span> : null}
       </div>
-      <h2><a href={`/${item.collection}/${item.slug}/`}>{item.title}</a></h2>
+      <h2><a href={withBase(data, `/${item.collection}/${item.slug}/`)}>{item.title}</a></h2>
       <p>{item.description}</p>
       <div className="tags">
         {item.tags.map((tag) => <span key={tag}>{tag}</span>)}
@@ -209,6 +211,20 @@ function StaticPage({ eyebrow, title, description }: { eyebrow: string; title: s
       <p className="lead">{description}</p>
     </section>
   );
+}
+
+function withBase(data: SiteData, href: string) {
+  if (/^https?:\/\//.test(href) || href.startsWith('mailto:') || href.startsWith('#')) return href;
+  const basePath = data.site.basePath.replace(/\/$/, '');
+  const path = href.startsWith('/') ? href : `/${href}`;
+  return `${basePath}${path}` || '/';
+}
+
+function stripBasePath(path: string, basePath: string) {
+  const normalizedBase = basePath.replace(/\/$/, '');
+  if (!normalizedBase || normalizedBase === '/') return path;
+  if (path === normalizedBase) return '/';
+  return path.startsWith(`${normalizedBase}/`) ? path.slice(normalizedBase.length) : path;
 }
 
 function normalizePath(path: string) {
