@@ -11,33 +11,33 @@ export function HeroSection({ route }: HeroSectionProps) {
     <section className="hero">
       <div className="container hero-inner">
         <div className="hero-copy">
-          <p className="eyebrow">О себе</p>
+          <p className="eyebrow">Personal site</p>
           <h1 className="page-title">
-            Заголовок главной <span className="hero-title-accent">страницы</span>
+            Clear headline about <span className="hero-title-accent">your work</span>
           </h1>
           <p className="lead">
-            Описание рыба-текстом. Здесь будет короткое объяснение, кто вы, чем занимаетесь и почему человеку стоит
-            остаться на сайте.
+            A short, human introduction for the homepage. Use this space to explain what you do, what kind of problems
+            you work with, and why someone should continue reading.
           </p>
           <div className="hero-actions">
-            <ButtonLink href={relativeHref(route, '/services/')}>Услуги</ButtonLink>
+            <ButtonLink href={relativeHref(route, '/services/')}>Services</ButtonLink>
             <ButtonLink href={site.telegram} tone="secondary">Telegram</ButtonLink>
           </div>
         </div>
 
-        <aside className="hero-note" aria-label="Коротко">
-          <p className="hero-note-label">Коротко</p>
+        <aside className="hero-note" aria-label="Quick facts">
+          <p className="hero-note-label">Quick facts</p>
           <dl>
             <div>
-              <dt>Фокус</dt>
-              <dd>Описание рыба-текстом про направление работы.</dd>
+              <dt>Focus</dt>
+              <dd>A short line about your main professional direction.</dd>
             </div>
             <div>
-              <dt>Опыт</dt>
-              <dd>Короткая строка, которую можно заменить на реальный факт.</dd>
+              <dt>Experience</dt>
+              <dd>A practical detail you can later replace with a real achievement.</dd>
             </div>
             <div>
-              <dt>Контакт</dt>
+              <dt>Contact</dt>
               <dd>
                 <a href={site.telegram} rel="noreferrer">Telegram</a>
               </dd>

@@ -11,12 +11,7 @@ html {
 }
 
 body {
-  background:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    var(--color-surface);
-  background-position: center top;
-  background-size: 100% 176px, 280px 100%;
+  background: var(--color-surface);
   margin: 0;
   min-width: 320px;
 }

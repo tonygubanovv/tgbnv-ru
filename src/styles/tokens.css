@@ -17,7 +17,6 @@
   --color-surface-tertiary: #f0f0ed;
   --color-border: #e4e5e1;
   --color-dark: #181916;
-  --grid-line: rgba(228, 229, 225, 0.82);
   --shadow-card: 0 1px 4px rgba(110, 111, 109, 0.08);
   --shadow-card-hover: 0 4px 14px rgba(110, 111, 109, 0.12);
   --shadow-elevated: inset 0 1px 0 rgba(228, 229, 225, 0.3), inset 0 -1px 0 rgba(110, 111, 109, 0.1);

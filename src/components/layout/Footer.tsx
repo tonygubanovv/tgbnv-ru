@@ -15,7 +15,7 @@ export function Footer({ route }: FooterProps) {
         </div>
 
         <div className="footer-links">
-          <a href={relativeHref(route, '/services/')}>Услуги</a>
+          <a href={relativeHref(route, '/services/')}>Services</a>
           <a href={site.telegram} rel="noreferrer">Telegram</a>
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </div>

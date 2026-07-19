@@ -33,6 +33,7 @@ function htmlDocument(pathname: string, appHtml: string, assets: string[], injec
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="description" content="${description}">
     ${assetTags}
     ${injections.head}

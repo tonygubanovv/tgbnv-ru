@@ -4,10 +4,11 @@ export function ServicesPage() {
   return (
     <>
       <section className="container page-hero">
-        <p className="eyebrow">Услуги</p>
-        <h1 className="page-title">Заголовок страницы услуг</h1>
+        <p className="eyebrow">Services</p>
+        <h1 className="page-title">Service page headline</h1>
         <p className="lead">
-          Описание рыба-текстом. Здесь будет короткое объяснение, какие задачи можно обсудить и для кого эти услуги.
+          A concise overview of the problems this page will cover, who the services are for, and what kind of outcomes
+          a client can expect.
         </p>
       </section>
 

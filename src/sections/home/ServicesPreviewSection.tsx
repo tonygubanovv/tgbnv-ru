@@ -8,16 +8,16 @@ interface ServicesPreviewSectionProps {
 
 const services = [
   {
-    title: 'Название услуги',
-    description: 'Описание услуги рыба-текстом. Что входит, какой результат получает человек, когда стоит обратиться.'
+    title: 'Service title',
+    description: 'A short service description with the problem, the process, and the expected result.'
   },
   {
-    title: 'Название услуги',
-    description: 'Описание услуги рыба-текстом. Здесь будет второй понятный блок без лишних деталей.'
+    title: 'Service title',
+    description: 'A second service description written as a useful placeholder, not generic filler.'
   },
   {
-    title: 'Название услуги',
-    description: 'Описание услуги рыба-текстом. Можно заменить на конкретное направление работы.'
+    title: 'Service title',
+    description: 'A third service description that can later become a real offer or consulting format.'
   }
 ];
 
@@ -26,9 +26,9 @@ export function ServicesPreviewSection({ route }: ServicesPreviewSectionProps) {
     <section className="section surface-soft">
       <div className="container">
         <SectionHeader
-          eyebrow="Услуги"
-          title="Заголовок блока услуг"
-          description="Короткое описание рыба-текстом: какие направления есть и чем они полезны."
+          eyebrow="Services"
+          title="Service section headline"
+          description="A compact summary of the service directions and why they matter."
         />
 
         <div className="grid three">
@@ -38,7 +38,7 @@ export function ServicesPreviewSection({ route }: ServicesPreviewSectionProps) {
         </div>
 
         <div className="section-action">
-          <a href={relativeHref(route, '/services/')}>Смотреть все услуги</a>
+          <a href={relativeHref(route, '/services/')}>View all services</a>
         </div>
       </div>
     </section>

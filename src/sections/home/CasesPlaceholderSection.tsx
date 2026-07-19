@@ -5,9 +5,9 @@ export function CasesPlaceholderSection() {
     <section className="section surface-dark">
       <div className="container">
         <SectionHeader
-          eyebrow="Кейсы"
-          title="Заголовок будущего блока кейсов"
-          description="Пока блог и кейсы убраны. Здесь позже можно вернуть карточки кейсов, когда будет понятен формат контента."
+          eyebrow="Work"
+          title="Future work section headline"
+          description="A placeholder for future case studies, selected projects, or notes once the content format is clear."
         />
       </div>
     </section>

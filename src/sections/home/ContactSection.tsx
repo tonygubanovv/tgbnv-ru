@@ -6,11 +6,10 @@ export function ContactSection() {
     <section className="section">
       <div className="container contact-band">
         <div>
-          <p className="eyebrow">Контакт</p>
-          <h2>Заголовок блока контакта</h2>
+          <p className="eyebrow">Contact</p>
+          <h2>Contact section headline</h2>
           <p>
-            Описание рыба-текстом. Здесь можно написать, с какими вопросами лучше обращаться и что прислать первым
-            сообщением.
+            A short note about what kind of questions are worth discussing and what to include in the first message.
           </p>
         </div>
 

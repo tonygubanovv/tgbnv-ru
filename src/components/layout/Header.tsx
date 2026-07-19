@@ -9,12 +9,12 @@ export function Header({ route }: HeaderProps) {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <a className="brand" href={relativeHref(route, '/')} aria-label="На главную">
+        <a className="brand" href={relativeHref(route, '/')} aria-label="Go to homepage">
           <span className="brand-mark">TG</span>
           <span>{site.domain}</span>
         </a>
 
-        <nav className="nav" aria-label="Основная навигация">
+        <nav className="nav" aria-label="Primary navigation">
           {navItems.map((item) => (
             <a className={route === item.href ? 'active' : undefined} href={relativeHref(route, item.href)} key={item.href}>
               {item.label}
