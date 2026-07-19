@@ -6,20 +6,15 @@
   display: inline-flex;
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   gap: 8px;
-  height: 32px;
+  height: 34px;
   justify-content: center;
-  line-height: 22px;
+  letter-spacing: 0;
+  line-height: 20px;
   padding: 7px 14px;
   text-decoration: none;
-  transform: translateY(0);
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease, color 140ms ease;
   white-space: nowrap;
 }
 
@@ -31,21 +26,18 @@
 .button.secondary {
   background: var(--color-surface);
   color: var(--color-brand);
-  font-size: 12px;
-  line-height: 16px;
 }
 
 .button.primary:hover {
   background: var(--color-brand-hover);
+  border-color: var(--color-brand-hover);
   box-shadow: var(--shadow-button-hover);
   color: var(--color-inverse);
-  transform: translateY(-1px);
 }
 
 .button.primary:active {
   background: var(--color-brand-active);
-  box-shadow: var(--shadow-button);
-  transform: translateY(0);
+  border-color: var(--color-brand-active);
 }
 
 .button.secondary:hover {
@@ -53,33 +45,29 @@
   border-color: var(--color-brand-hover);
   box-shadow: var(--shadow-button-hover);
   color: var(--color-brand-hover);
-  transform: translateY(-1px);
 }
 
 .button.secondary:active {
   background: var(--color-brand-soft);
-  border-color: var(--color-brand);
+  border-color: var(--color-brand-active);
   color: var(--color-brand-active);
-  transform: translateY(0);
 }
 
 .button:focus-visible {
   box-shadow: var(--focus-ring), var(--shadow-button);
-  outline: 0;
 }
 
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: var(--shadow-card);
-  padding: 16px;
+  padding: 20px;
 }
 
 .site-header {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(251, 251, 250, 0.94);
   border-bottom: 1px solid var(--color-border);
-  box-shadow: inset 0 1px 0 var(--color-surface);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -89,21 +77,21 @@
 .header-inner {
   align-items: center;
   display: flex;
-  gap: 24px;
-  min-height: 52px;
+  gap: 28px;
+  min-height: 56px;
 }
 
 .brand {
   align-items: center;
   display: inline-flex;
   flex: 0 0 auto;
-  font-size: 16px;
-  font-weight: 600;
-  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  gap: 10px;
   letter-spacing: 0;
-  line-height: 24px;
+  line-height: 22px;
   text-decoration: none;
-  transition: color 160ms ease;
+  transition: color 140ms ease;
 }
 
 .brand:hover {
@@ -118,90 +106,75 @@
   color: var(--color-inverse);
   display: inline-flex;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   height: 24px;
   justify-content: center;
+  letter-spacing: 0;
   line-height: 1;
-  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  transition: background-color 140ms ease, border-color 140ms ease;
   width: 24px;
 }
 
 .brand:hover .brand-mark {
-  background: var(--color-brand);
-  border-color: var(--color-brand);
+  background: var(--color-text);
+  border-color: var(--color-text);
 }
 
 .nav {
   display: flex;
   flex: 1;
-  gap: 6px;
+  gap: 4px;
   justify-content: center;
 }
 
 .nav a {
-  border-radius: 4px;
+  border-radius: 6px;
   color: var(--color-text-muted);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0;
   line-height: 22px;
-  padding: 3px 10px;
+  padding: 5px 11px;
   position: relative;
   text-decoration: none;
-  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
 }
 
-.nav a:hover,
-.nav a.active {
+.nav a:hover {
   background: var(--color-surface-tertiary);
+  color: var(--color-text);
+}
+
+.nav a.active {
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border);
   color: var(--color-text);
 }
 
 .nav a:active {
   background: var(--color-border);
-  color: var(--color-text);
 }
 
 .nav a:focus-visible {
   box-shadow: var(--focus-ring);
-  outline: 0;
-}
-
-.nav a::after {
-  background: var(--color-brand);
-  border-radius: 999px;
-  bottom: -11px;
-  content: "";
-  height: 2px;
-  left: 10px;
-  opacity: 0;
-  position: absolute;
-  right: 10px;
-  transform: scaleX(0.4);
-  transition: opacity 160ms ease, transform 160ms ease;
-}
-
-.nav a:hover::after,
-.nav a.active::after {
-  opacity: 1;
-  transform: scaleX(1);
 }
 
 .footer {
   background: var(--color-dark);
   color: var(--color-inverse);
-  padding-block: 44px;
+  padding-block: 48px;
 }
 
 .footer-inner {
   align-items: flex-start;
   display: flex;
-  gap: 24px;
+  gap: 32px;
   justify-content: space-between;
 }
 
 .footer-title {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 24px;
   margin: 0 0 8px;
 }
@@ -224,8 +197,10 @@
 .footer a {
   color: var(--color-inverse);
   font-size: 13px;
+  font-weight: 500;
   line-height: 22px;
   text-decoration-color: rgba(255, 255, 255, 0.34);
+  transition: color 140ms ease, text-decoration-color 140ms ease;
 }
 
 .footer a:hover {
@@ -253,10 +228,6 @@
   .button {
     min-height: 44px;
     padding-inline: 16px;
-  }
-
-  .nav a::after {
-    bottom: 1px;
   }
 
   .header-cta {

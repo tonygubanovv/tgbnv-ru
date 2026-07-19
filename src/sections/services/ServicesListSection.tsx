@@ -2,16 +2,25 @@ import { ServiceCard } from '../../components/ui/ServiceCard';
 
 const services = [
   {
-    title: 'Service title',
-    description: 'A short service description with the problem, the process, and the expected result.'
+    title: 'Сайт и структура',
+    description: [
+      'Анализ страниц, навигации, форм, пользовательских сценариев и логики подачи продукта.',
+      'На выходе — список конкретных изменений, которые помогут сделать сайт понятнее, удобнее и полезнее для продаж.'
+    ]
   },
   {
-    title: 'Service title',
-    description: 'A second service description written as a useful placeholder, not generic filler.'
+    title: 'SEO и контент',
+    description: [
+      'Работа со структурой страниц, поисковыми запросами, метаданными, микроразметкой и текстами.',
+      'Цель — повысить видимость сайта и помочь пользователю быстрее найти нужную информацию.'
+    ]
   },
   {
-    title: 'Service title',
-    description: 'A third service description that can later become a real offer or consulting format.'
+    title: 'Аналитика и точки роста',
+    description: [
+      'Настройка и проверка аналитики, событий, целей и пользовательских сценариев.',
+      'Результат — понимание, откуда приходят пользователи, где теряются и какие изменения стоит проверять в первую очередь.'
+    ]
   }
 ];
 

@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pageDescription, pageRoutes, pageTitle } from '../src/app/routes';
+import { typographHtml } from '../src/lib/typograph';
 import { render } from '../src/render';
 
 const distDir = path.join(process.cwd(), 'dist');
@@ -40,7 +41,7 @@ function htmlDocument(pathname: string, appHtml: string, assets: string[], injec
   </head>
   <body>
     ${injections.bodyStart}
-    <div id="root">${appHtml}</div>
+    <div id="root">${typographHtml(appHtml)}</div>
   </body>
 </html>`;
 }

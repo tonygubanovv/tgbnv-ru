@@ -4,6 +4,7 @@ import { ContactSection } from '../sections/home/ContactSection';
 import { HeroSection } from '../sections/home/HeroSection';
 import { IntroSection } from '../sections/home/IntroSection';
 import { ServicesPreviewSection } from '../sections/home/ServicesPreviewSection';
+import { TelegramSection } from '../sections/home/TelegramSection';
 
 interface HomePageProps {
   route: string;
@@ -17,6 +18,7 @@ export function HomePage({ route }: HomePageProps) {
       <ServicesPreviewSection route={route} />
       <ApproachSection />
       <CasesPlaceholderSection />
+      <TelegramSection />
       <ContactSection />
     </>
   );

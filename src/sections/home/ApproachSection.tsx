@@ -2,16 +2,16 @@ import { SectionHeader } from '../../components/ui/SectionHeader';
 
 const steps = [
   {
-    title: 'First step',
-    description: 'A short explanation of what happens first and what becomes clearer after this stage.'
+    title: 'Разобраться в задаче',
+    description: 'Определяется проблема, цель и ограничения. Проверяются сайт, данные, текущие материалы и пользовательский путь.'
   },
   {
-    title: 'Second step',
-    description: 'A practical note about how the work is organized and what inputs are needed.'
+    title: 'Собрать решение',
+    description: 'Формируется структура работ: что нужно исправить, что проверить и какие данные потребуются.'
   },
   {
-    title: 'Third step',
-    description: 'A result-oriented description of what the client receives and how it can be used.'
+    title: 'Передать результат',
+    description: 'На выходе — понятные рекомендации, прототип, структура, текст, настройка или готовое решение, которое можно использовать в работе.'
   }
 ];
 
@@ -20,9 +20,9 @@ export function ApproachSection() {
     <section className="section">
       <div className="container">
         <SectionHeader
-          eyebrow="Approach"
-          title="Process section headline"
-          description="A concise explanation of how you make work clear, structured, and manageable."
+          eyebrow="Подход"
+          title="Сначала проблема, потом решение"
+          description="Мне важно сначала понять контекст, данные и ограничения, а уже потом предлагать изменения."
         />
 
         <div className="grid three">

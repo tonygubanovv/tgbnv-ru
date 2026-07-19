@@ -18,7 +18,7 @@ export function normalizePath(path: string) {
 export function pageTitle(pathname: string) {
   const titles: Record<string, string> = {
     '/': `${site.name} | ${site.domain}`,
-    '/services/': `Services | ${site.name}`
+    '/services/': `Услуги | ${site.name}`
   };
 
   return titles[normalizePath(pathname)] ?? site.name;

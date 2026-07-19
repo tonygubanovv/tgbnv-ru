@@ -3,13 +3,20 @@ export function IntroSection() {
     <section className="section">
       <div className="container split-section">
         <div>
-          <p className="eyebrow">About</p>
-          <h2>Short section headline about you</h2>
+          <p className="eyebrow">Обо мне</p>
+          <h2>Работаю на стыке маркетинга, продукта и технологий</h2>
         </div>
-        <p className="section-copy">
-          A focused paragraph about your background, your point of view, and the type of work you want this website to
-          represent. Keep it direct, specific, and easy to replace later.
-        </p>
+        <div className="section-copy">
+          <p>Основной фокус — сложные продукты, которые трудно быстро объяснить клиенту, партнеру или рынку.</p>
+          <p>
+            В работе важны понятное позиционирование, удобный сайт, корректная аналитика и контент, который помогает
+            принять решение, а не просто заполняет страницы.
+          </p>
+          <p>
+            На этом сайте будут заметки, разборы, подходы к работе и примеры задач, которые помогают думать о продукте
+            системно.
+          </p>
+        </div>
       </div>
     </section>
   );
