@@ -1,6 +1,5 @@
 import { hydrateRoot } from 'react-dom/client';
 import { App } from './app/App';
-import { typographElement } from './lib/typograph';
 import './styles/global.css';
 
 const root = document.getElementById('root');
@@ -10,4 +9,3 @@ if (!root) {
 }
 
 hydrateRoot(root, <App path={window.location.pathname} />);
-requestAnimationFrame(() => typographElement(root));

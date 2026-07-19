@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /
+
+Sitemap: https://t-gubanov.ru/sitemap.xml

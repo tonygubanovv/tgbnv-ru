@@ -1,3 +1,5 @@
+import { typographText as tx } from '../lib/typograph';
+
 export interface SiteConfig {
   name: string;
   domain: string;
@@ -16,12 +18,12 @@ export const site: SiteConfig = {
   name: 'Tony Gubanov',
   domain: 't-gubanov.ru',
   url: 'https://t-gubanov.ru',
-  description: 'Личный сайт о digital-маркетинге, сайтах, аналитике и работе со сложными B2B-продуктами.',
+  description: tx('Личный сайт о digital-маркетинге, сайтах, аналитике и работе со сложными B2B-продуктами.'),
   email: 'tonygubanovv@yandex.ru',
   telegram: 'https://t.me/tonygubanovv'
 };
 
 export const navItems: NavItem[] = [
-  { href: '/', label: 'Главная' },
-  { href: '/services/', label: 'Услуги' }
+  { href: '/', label: tx('Главная') },
+  { href: '/services/', label: tx('Услуги') }
 ];

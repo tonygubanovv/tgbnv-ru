@@ -1,30 +1,47 @@
 .container {
-  width: min(100% - 64px, var(--container));
+  width: min(100% - 72px, var(--container));
   margin-inline: auto;
 }
 
 .section {
-  padding-block: 72px;
+  padding-block: 88px;
 }
 
 .surface-soft {
-  background: var(--color-surface);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(245, 245, 242, 0.72)),
+    var(--color-surface-soft);
   border-block: 1px solid var(--color-border);
 }
 
-.surface-dark {
-  background: var(--color-dark);
+.section-dark {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    var(--color-dark);
+  background-size: 56px 56px;
   color: var(--color-inverse);
 }
 
-.surface-dark .section-copy,
-.surface-dark p {
+.section-dark .eyebrow {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.section-dark .section-copy,
+.section-dark p {
   color: rgba(255, 255, 255, 0.72);
+}
+
+.section-warm {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 244, 238, 0.1)),
+    var(--color-warm);
+  border-block: 1px solid var(--color-warm-border);
 }
 
 .grid {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .grid.three {
@@ -34,25 +51,25 @@
 .split-section {
   align-items: start;
   display: grid;
-  gap: 48px;
-  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 72px;
+  grid-template-columns: 370px minmax(0, 1fr);
 }
 
 .section-head {
   align-items: start;
   display: grid;
-  gap: 48px;
-  grid-template-columns: 360px minmax(0, 1fr);
-  margin-bottom: 28px;
+  gap: 72px;
+  grid-template-columns: 370px minmax(0, 1fr);
+  margin-bottom: 34px;
 }
 
 .section-head h2,
 .split-section h2,
 .contact-band h2 {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 0;
-  line-height: 26px;
+  line-height: 30px;
   margin: 0;
 }
 
@@ -73,7 +90,7 @@
   .split-section,
   .section-head {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 24px;
   }
 }
 
@@ -83,7 +100,7 @@
   }
 
   .section {
-    padding-block: 48px;
+    padding-block: 56px;
   }
 
   .grid.three {

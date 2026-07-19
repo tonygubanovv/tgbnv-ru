@@ -1,4 +1,5 @@
 import { site } from '../config/site';
+import { typographText as tx } from '../lib/typograph';
 
 export const pageRoutes = ['/', '/services/'] as const;
 
@@ -18,7 +19,7 @@ export function normalizePath(path: string) {
 export function pageTitle(pathname: string) {
   const titles: Record<string, string> = {
     '/': `${site.name} | ${site.domain}`,
-    '/services/': `Услуги | ${site.name}`
+    '/services/': `${tx('Услуги')} | ${site.name}`
   };
 
   return titles[normalizePath(pathname)] ?? site.name;

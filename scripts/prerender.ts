@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pageDescription, pageRoutes, pageTitle } from '../src/app/routes';
-import { typographHtml } from '../src/lib/typograph';
+import { site } from '../src/config/site';
 import { render } from '../src/render';
 
 const distDir = path.join(process.cwd(), 'dist');
@@ -41,7 +41,7 @@ function htmlDocument(pathname: string, appHtml: string, assets: string[], injec
   </head>
   <body>
     ${injections.bodyStart}
-    <div id="root">${typographHtml(appHtml)}</div>
+    <div id="root">${appHtml}</div>
   </body>
 </html>`;
 }
@@ -81,11 +81,30 @@ async function writePage(pathname: string, assets: string[], injections: HtmlInj
   await fs.writeFile(outputPath, htmlDocument(pathname, render(pathname), assets, injections), 'utf8');
 }
 
+function sitemapPath(pathname: string) {
+  return `${site.url}${pathname === '/' ? '/' : pathname}`;
+}
+
+async function writeSitemap() {
+  const urls = pageRoutes.map((route) => `  <url>
+    <loc>${sitemapPath(route)}</loc>
+  </url>`).join('\n');
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`;
+
+  await fs.writeFile(path.join(distDir, 'sitemap.xml'), sitemap, 'utf8');
+}
+
 async function main() {
   const assets = await getAssets();
   const injections = await readInjections();
 
   await Promise.all(pageRoutes.map((route) => writePage(route, assets, injections)));
+  await writeSitemap();
 }
 
 await main();
