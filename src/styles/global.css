@@ -180,6 +180,7 @@
   --copy-email-size: 22px; /* Owner exception: do not silently enlarge. */
   --share-control-size: var(--space-6);
   --related-card-measure: 320px;
+  --footer-column-measure: 192px;
   --cookie-control-height: var(--space-6);
   --feedback-measure: calc(var(--tip-measure) - var(--space-9));
   --icon-small: var(--text-2);
@@ -347,14 +348,17 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 .contact-section h2 { font-size: var(--display-1); margin-top: var(--space-3); }
 .contact-links { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
 .site-footer { background: var(--background); border-top: var(--line-thin) solid var(--border); }
-.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-7); }
+.footer-inner { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-6); }
 .footer-name { font-size: var(--text-4); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); }
 .group-label { color: var(--muted); font-size: var(--text-1); }
-.footer-groups { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-4) var(--space-7); }
-.footer-group { display: grid; gap: var(--space-2); }
-/* Both footer groups are vertical lists: one link per row, compact rows of 32 px (owner, 24.10.2026). */
+/* Groups keep their own height: a stretched one would hand its leftover height to the label and the link rows, so the
+   shorter column would show wider gaps than the taller one (owner, 24.10.2026). */
+.footer-groups { display: flex; align-items: start; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-4) var(--grid-gap); }
+/* Both columns reserve the measure of the longest link — the address — and every row the 24 px height of a topic chip, so the
+   two lists stand on one grid with their labels flush and no ragged widths (owner, 24.10.2026: «разъехалось… не поровнены»). */
+.footer-group { display: grid; gap: var(--space-1); min-width: var(--footer-column-measure); }
 .footer-links { display: grid; gap: var(--space-1); font-size: var(--text-2); }
-.footer-links a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--space-6); }
+.footer-links a { display: flex; align-items: center; min-height: var(--space-5); }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-4); border-top: var(--line-thin) solid var(--border); font-size: var(--text-1); color: var(--muted); flex-wrap: wrap; }
 .page-content { padding-block: var(--space-5) var(--space-9); min-height: var(--listing-min-height); }
 .redirect-page h1 { font-size: var(--display-2); margin-bottom: var(--heading-gap); }
@@ -544,7 +548,7 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
   .empty-decoration { opacity: var(--opacity-empty-mobile); }
   .contact-section { margin-block: var(--space-7); display: block; padding-top: var(--space-6); }
   .contact-links { margin-top: var(--space-5); }
-  .footer-inner { align-items: start; flex-direction: column; padding-block: var(--space-6) var(--space-5); gap: var(--space-4); }
+  .footer-inner { flex-direction: column; gap: var(--space-4); }
   .footer-groups { justify-content: flex-start; }
   .page-content { padding-block: var(--space-4) var(--space-8); }
   .page-heading { margin-bottom: var(--space-6); }
