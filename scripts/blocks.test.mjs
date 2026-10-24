@@ -1,10 +1,12 @@
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import assert from 'node:assert/strict';
-import { parse, serialize } from 'parse5';
+import { parse, parseFragment, serialize } from 'parse5';
 import { applyBlocks } from '../src/utils/blocks.ts';
 
+// A fragment, not a whole page: these checks are about the article body, and a page without <body> carries no script.
 const render = body => {
-  const document = parse(`<div class="prose">${body}</div>`);
+  const document = parseFragment(`<div class="prose">${body}</div>`);
   applyBlocks(document);
   return serialize(document);
 };
@@ -141,4 +143,93 @@ test('Headings, code and links never take the marker, and the page gets the tap 
   // The script travels with the marker, keeps its own text intact and appears once per page.
   assert.equal(html.match(/querySelectorAll\('\.tip'\)/gu)?.length, 1);
   assert.doesNotMatch(html, /&lt;/u);
+});
+
+test('A spoiler keeps its words in the sentence and only the cover is added', () => {
+  const result = render('<p>Я проверил логи: ==ИИ-шкам на него абсолютно плевать)== внутри.</p>');
+  assert.match(result, /<span class="spoiler"><span class="spoiler-text">ИИ-шкам на него абсолютно плевать\)<\/span><\/span> внутри\./u);
+  assert.doesNotMatch(result, /==/u);
+  // A crawler that only takes the tags away reads the whole sentence, the covered words included.
+  assert.equal(result.replace(/<[^>]+>/gu, ''), 'Я проверил логи: ИИ-шкам на него абсолютно плевать) внутри.');
+});
+
+test('Markdown cuts a line with emphasis into pieces: the cover still spans them', () => {
+  const result = render('<p><strong>Спойлер:</strong> ==вот <em>что</em> было внутри==.</p>');
+  assert.match(result, /<strong>Спойлер:<\/strong> <span class="spoiler"><span class="spoiler-text">вот <em>что<\/em> было внутри<\/span><\/span>\./u);
+  // A link written between the markers stays a link, so the revealed sentence still works.
+  assert.match(render('<p>==ответ в <a href="https://example.com">логах</a>==.</p>'), /<span class="spoiler-text">ответ в <a href="https:\/\/example\.com">логах<\/a><\/span>/u);
+});
+
+test('Several spoilers on one page each get their own cover', () => {
+  const result = render('<p>Первый ==скрыт== и второй ==тоже скрыт==.</p><p>Третий ==в другом абзаце==.</p>');
+  assert.equal(result.match(/class="spoiler-text"/gu)?.length, 3);
+  assert.match(result, /Первый <span class="spoiler">.*<\/span> и второй <span class="spoiler">/u);
+});
+
+test('A marker with nothing to hide or no pair at the end stays as written', () => {
+  assert.match(render('<p>Пусто ==== тут.</p>'), /<p>Пусто ==== тут\.<\/p>/u);
+  assert.match(render('<p>Сломанное ==метка</p>'), /<p>Сломанное ==метка<\/p>/u);
+});
+
+test('The spoiler never takes a heading, code or a link, and its scripts come once', () => {
+  const page = parse('<html><head></head><body><div class="prose"><h2>Заголовок ==пояс==</h2><p><code>a == b</code></p><p><a href="https://example.com">ссылка ==пояс==</a></p><p>Обычные ==слова==.</p></div></body></html>');
+  applyBlocks(page);
+  const html = serialize(page);
+  assert.match(html, /<h2>Заголовок ==пояс==<\/h2>/u);
+  assert.match(html, /<code>a == b<\/code>/u);
+  assert.match(html, /<a href="https:\/\/example\.com">ссылка ==пояс==<\/a>/u);
+  assert.equal(html.match(/class="spoiler"/gu)?.length, 1);
+  // The cover is switched on in the head before the article paints, and the tap script travels with the marker.
+  assert.equal(html.match(/dataset\.spoiler = 'on'/gu)?.length, 1);
+  assert.ok(html.indexOf("dataset.spoiler = 'on'") < html.indexOf('class="prose"'), 'the flag must come before the article');
+  assert.equal(html.match(/querySelectorAll\('\.spoiler'\)/gu)?.length, 1);
+});
+
+test('A page with a card but no inline markers ships no script at all', () => {
+  const page = parse('<html><head></head><body><div class="prose"><p>:::заметка Важно</p><p>:::</p></div></body></html>');
+  applyBlocks(page);
+  assert.doesNotMatch(serialize(page), /<script>/u);
+});
+
+
+test('Spoilers reveal independently, restore inner links and stop handling Space after opening', () => {
+  const page = parse('<html><head></head><body><div class="prose"><p>==first== ==second==</p></div></body></html>');
+  applyBlocks(page);
+  const scripts = [...serialize(page).matchAll(/<script>([\s\S]*?)<\/script>/gu)].map(match => match[1]);
+  const node = () => ({
+    attrs: new Map(), listeners: new Map(),
+    setAttribute(key, value) { this.attrs.set(key, value); },
+    getAttribute(key) { return this.attrs.get(key) ?? null; },
+    hasAttribute(key) { return this.attrs.has(key); },
+    removeAttribute(key) { this.attrs.delete(key); },
+    addEventListener(key, handler) { this.listeners.set(key, handler); },
+    removeEventListener(key) { this.listeners.delete(key); },
+    click() { this.listeners.get('click')?.({ preventDefault() {} }); },
+    after(item) { this.announcement = item; },
+  });
+  const covers = ['first', 'second'].map(text => {
+    const cover = node(), words = node(), link = node();
+    link.setAttribute('tabindex', '2');
+    words.textContent = text;
+    words.querySelectorAll = () => [link];
+    cover.querySelector = () => words;
+    return Object.assign(cover, { words, link });
+  });
+  runInNewContext(scripts.find(script => script.includes("querySelectorAll('.spoiler')")), {
+    document: { querySelectorAll: () => covers, createElement: node },
+    requestAnimationFrame: callback => callback(),
+  });
+  assert.equal(covers[0].words.getAttribute('aria-hidden'), 'true');
+  assert.equal(covers[0].link.getAttribute('tabindex'), '-1');
+  covers[0].listeners.get('keydown')({ key: 'Enter', preventDefault() {} });
+  assert.equal(covers[0].getAttribute('data-spoiler-open'), 'true');
+  assert.equal(covers[0].words.getAttribute('aria-hidden'), null);
+  assert.equal(covers[0].link.getAttribute('tabindex'), '2');
+  assert.equal(covers[0].getAttribute('role'), null);
+  assert.equal(covers[0].listeners.has('keydown'), false);
+  assert.equal(covers[0].announcement.textContent, 'Спойлер раскрыт');
+  assert.equal(covers[1].hasAttribute('data-spoiler-open'), false);
+  covers[1].listeners.get('keydown')({ key: ' ', preventDefault() {} });
+  assert.equal(covers[1].words.getAttribute('aria-hidden'), null);
+  assert.doesNotMatch(scripts.join(''), /localStorage|sessionStorage|document\.cookie/u);
 });

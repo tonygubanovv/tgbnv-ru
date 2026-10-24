@@ -10,6 +10,7 @@ type Child = Element['childNodes'][number];
  *   :::цитата-акцент Автор, роль  → the same card filled with the accent colour (also :::quote-accent)
  *   :::заметка                    → a note card, text only (also :::note)
  *   UTM{{расшифровка метки}}      → the word before the marker gets a hidden note card
+ *   ==раскрыть по тапу==          → the words between the markers get a Telegram-style spoiler
  * Blank lines around the markers are optional: without them Markdown joins the marker and the text into one paragraph.
  * A marker with no closing ::: stays on the page as the text he wrote instead of swallowing the article.
  */
@@ -29,7 +30,13 @@ const TIP_HOST = new Set(['strong', 'em', 'b', 'i', 'code', 'dfn', 'abbr', 'span
    and a heading would repeat the marker in the contents, where only its plain words belong. */
 const TIP_SKIP = new Set(['pre', 'code', 'script', 'style', 'svg', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 
+/* The spoiler marker: a pair of double equals signs covers the words between them the way Telegram does.
+   The words travel in the page as written, so a crawler and a reader without JavaScript get the whole sentence,
+   and only the cover lives in CSS. An unpaired marker stays on the page exactly as he typed it. */
+const SPOILER = '==';
+
 type Item = { block: { kind: Kind; rest: string; raw: string } } | { end: true } | { node: Child };
+type Made = { tips: number; spoilers: number };
 type Text = DefaultTreeAdapterMap['textNode'];
 type Part = { node: Text; start: number };
 
@@ -182,12 +189,49 @@ function oneTip(parent: Element): boolean {
   }
 }
 
-function inlineTips(node: Element): number {
+function inlineTips(node: Element, made: Made): void {
   const children = [...node.childNodes];
-  let made = 0;
-  while (oneTip(node)) made++;
-  for (const child of children) if ('tagName' in child && !TIP_SKIP.has(child.tagName)) made += inlineTips(child);
-  return made;
+  while (oneTip(node)) made.tips++;
+  for (const child of children) if ('tagName' in child && !TIP_SKIP.has(child.tagName)) inlineTips(child, made);
+}
+
+const isTip = (node: Element) => (attribute(node, 'class') ?? '').split(/\s+/).includes('tip');
+
+/** Turns the first whole ==pair= of this element into a spoiler. A pair with no words of its own stays as written. */
+function oneSpoiler(parent: Element): boolean {
+  const { text, parts } = flowOf(parent);
+  const siblings = [...parent.childNodes];
+  let from = 0;
+  for (;;) {
+    const open = text.indexOf(SPOILER, from);
+    if (open === -1) return false;
+    const close = text.indexOf(SPOILER, open + SPOILER.length);
+    if (close === -1) return false;
+    from = close + SPOILER.length;
+    const first = pieceAt(parts, open);
+    const last = pieceAt(parts, close);
+    const firstAt = siblings.indexOf(first.node);
+    const lastAt = siblings.indexOf(last.node);
+    const head = first.node.value.slice(0, open - first.start);
+    const openEnd = open - first.start + SPOILER.length;
+    // Markdown cuts a line with bold words or a link into pieces, so the two markers often sit in different ones.
+    const hidden = first === last
+      ? pieces(first.node.value.slice(openEnd, close - first.start), parent)
+      : [...pieces(first.node.value.slice(openEnd), parent), ...siblings.slice(firstAt + 1, lastAt), ...pieces(last.node.value.slice(0, close - last.start), parent)];
+    if (!hidden.some(visible)) continue;
+    const words = move(shell('<span class="spoiler-text"></span>'), hidden);
+    const cover = move(shell('<span class="spoiler"></span>'), [words]);
+    const tail = last.node.value.slice(close - last.start + SPOILER.length);
+    parent.childNodes.splice(firstAt, lastAt - firstAt + 1, ...pieces(head, parent), cover, ...pieces(tail, parent));
+    return true;
+  }
+}
+
+function inlineSpoilers(node: Element, made: Made): void {
+  const children = [...node.childNodes];
+  while (oneSpoiler(node)) made.spoilers++;
+  // A note card is not part of the sentence: its own hidden words keep their own marker rules.
+  for (const child of children) if ('tagName' in child && !TIP_SKIP.has(child.tagName) && !isTip(child)) inlineSpoilers(child, made);
 }
 
 /* The HTML spec keeps a quote's author out of the quoted words: attribution must stand outside the
@@ -275,7 +319,7 @@ function figures(children: Child[]): void {
   }
 }
 
-function transform(prose: Element): number {
+function transform(prose: Element, made: Made): void {
   const items = prose.childNodes.flatMap(child => (isTag(child, 'p') ? itemsOf(child) : [{ node: child }]));
   const result: Child[] = [];
   for (let index = 0; index < items.length; index++) {
@@ -305,14 +349,15 @@ function transform(prose: Element): number {
   children.length = 0;
   children.push(...result);
   figures(children);
-  return inlineTips(prose);
+  inlineTips(prose, made);
+  inlineSpoilers(prose, made);
 }
 
-function walk(node: Node): number {
-  if (!('childNodes' in node)) return 0;
-  if ('tagName' in node && ['pre', 'code', 'script', 'style', 'svg'].includes(node.tagName)) return 0;
-  if ('tagName' in node && (attribute(node, 'class') ?? '').split(/\s+/).includes('prose')) return transform(node);
-  return [...node.childNodes].reduce((made, child) => made + walk(child), 0);
+function walk(node: Node, made: Made): void {
+  if (!('childNodes' in node)) return;
+  if ('tagName' in node && ['pre', 'code', 'script', 'style', 'svg'].includes(node.tagName)) return;
+  if ('tagName' in node && (attribute(node, 'class') ?? '').split(/\s+/).includes('prose')) return transform(node, made);
+  for (const child of [...node.childNodes]) walk(child, made);
 }
 
 /** Touch has no hover, so a tap opens the card and the script keeps it inside the screen. Shipped only on pages that use the marker. */
@@ -392,6 +437,50 @@ const TIP_SCRIPT = `(function () {
   window.addEventListener('scroll', closeOnScroll, { passive: true, capture: true });
 })()`;
 
+/* A spoiler is closed by the page itself and opened by the reader: the cover is painted only once the browser has
+   announced that scripts run, so a visitor without JavaScript simply reads the whole sentence. Nothing is stored
+   anywhere — the opened state lives on the element until the page is reloaded. */
+const SPOILER_FLAG = `document.documentElement.dataset.spoiler = 'on'`;
+const SPOILER_SCRIPT = `(function () {
+  [].slice.call(document.querySelectorAll('.spoiler')).forEach(function (cover) {
+    var words = cover.querySelector('.spoiler-text');
+    var links = [].slice.call(words.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'));
+    var stops = links.map(function (link) { return link.getAttribute('tabindex'); });
+    links.forEach(function (link) { link.setAttribute('tabindex', '-1'); });
+    function open(event) {
+      if (cover.hasAttribute('data-spoiler-open')) return;
+      event.preventDefault();
+      // The effect is what goes away, not the words: they keep their own place in the sentence.
+      words.removeAttribute('aria-hidden');
+      links.forEach(function (link, index) {
+        if (stops[index] === null) link.removeAttribute('tabindex');
+        else link.setAttribute('tabindex', stops[index]);
+      });
+      cover.setAttribute('data-spoiler-open', 'true');
+      ['role', 'aria-expanded', 'aria-label'].forEach(function (name) { cover.removeAttribute(name); });
+      // Keep the current focus anchor; the next Tab continues forward naturally.
+      cover.setAttribute('tabindex', '-1');
+      cover.removeEventListener('keydown', onKey);
+      var announcement = document.createElement('span');
+      announcement.className = 'sr-only';
+      announcement.setAttribute('role', 'status');
+      cover.after(announcement);
+      requestAnimationFrame(function () { announcement.textContent = 'Спойлер раскрыт'; });
+    }
+    // The cover itself is the control, so a keyboard reader gets a collapsed button and never hears the hidden words.
+    cover.setAttribute('role', 'button');
+    cover.setAttribute('tabindex', '0');
+    cover.setAttribute('aria-expanded', 'false');
+    cover.setAttribute('aria-label', 'Раскрыть спойлер');
+    words.setAttribute('aria-hidden', 'true');
+    function onKey(event) {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); cover.click(); }
+    }
+    cover.addEventListener('click', open, { once: true });
+    cover.addEventListener('keydown', onKey);
+  });
+})()`;
+
 function findByTag(node: Node, tagName: string): Element | null {
   if (isTag(node, tagName)) return node;
   if (!('childNodes' in node)) return null;
@@ -405,7 +494,15 @@ function findByTag(node: Node, tagName: string): Element | null {
 /** Rewrites the owner's block markers in the parsed page. Runs before typography so their wording is formatted too. */
 export const applyBlocks = (root: Node): void => {
   tipSeq = 0;
-  if (walk(root) === 0) return;
+  const made: Made = { tips: 0, spoilers: 0 };
+  walk(root, made);
   const body = findByTag(root, 'body');
-  if (body) move(body, [textNode('\n', body), shell(`<script>${TIP_SCRIPT}</script>`)]);
+  if (!body) return;
+  // Each marker ships the script it needs, and nothing else: a page of plain prose carries neither.
+  if (made.tips) move(body, [textNode('\n', body), shell(`<script>${TIP_SCRIPT}</script>`)]);
+  if (!made.spoilers) return;
+  const head = findByTag(root, 'head');
+  // The cover must exist before the article paints, so the flag that switches it on is the first thing in the head.
+  if (head) move(head, [textNode('\n', head), shell(`<script>${SPOILER_FLAG}</script>`)]);
+  move(body, [textNode('\n', body), shell(`<script>${SPOILER_SCRIPT}</script>`)]);
 };

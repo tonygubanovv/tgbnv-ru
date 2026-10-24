@@ -188,6 +188,11 @@
   --meta-icon-gap: 6px;
   --meta-icon-shift: -1px;
   --cookie-control-height: var(--space-6);
+  --spoiler-grain: 0.8px;
+  --spoiler-tile: var(--space-2);
+  --spoiler-ink: var(--muted);
+  --spoiler-fill: var(--code-mark);
+  --spoiler-duration: 1.8s;
   --feedback-measure: calc(var(--tip-measure) - var(--space-9));
   --icon-small: var(--text-2);
   --icon-compact: var(--text-3);
@@ -331,6 +336,7 @@ svg { flex-shrink: 0; }
 }
 /* Tags are quiet labels; only the ones that lead somewhere are clickable and taller. */
 .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5); }
+.tag-filter[hidden] { display: none; }
 .tag { display: inline-flex; align-items: center; padding: var(--line-thin) var(--space-2); min-height: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); font-size: var(--text-1); color: var(--muted); line-height: var(--leading-label); }
 /* A topic is a chip everywhere: the filter button in the blog and the chip in an article share one look, and both answer with colour only. */
 :is(button, a).tag { background: transparent; transition: color var(--duration-state), border-color var(--duration-state); }
@@ -463,6 +469,43 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 /* The script keeps the card inside the screen: it slides along the line and turns under the word near the top edge. */
 .tip[data-tip-below] > .tip-bubble { top: calc(100% + var(--space-2)); bottom: auto; }
 .tip[data-tip-below] > .tip-bubble::after { top: auto; bottom: 100%; }
+/* Inline spoilers retain their line fragments and natural text metrics. A registered opacity
+   fades the grain out without shrinking its tiles or moving any neighbouring words. */
+@property --spoiler-veil { syntax: "<number>"; inherits: false; initial-value: 0; }
+.spoiler {
+  --spoiler-veil: 0;
+  --spoiler-particle: color-mix(in srgb, var(--spoiler-ink) calc(var(--spoiler-veil) * 75%), transparent);
+  border-radius: var(--radius-sm);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-color: color-mix(in srgb, var(--spoiler-fill) calc(var(--spoiler-veil) * 100%), transparent);
+  /* Positions describe particle geometry; four incommensurate tiles avoid a dotted grid. */
+  background-image:
+    radial-gradient(circle at 17% 29%, var(--spoiler-particle) var(--spoiler-grain), transparent calc(var(--spoiler-grain) + 0.3px)),
+    radial-gradient(circle at 71% 63%, var(--spoiler-particle) var(--spoiler-grain), transparent calc(var(--spoiler-grain) + 0.3px)),
+    radial-gradient(circle at 43% 81%, var(--spoiler-particle) calc(var(--spoiler-grain) * 0.7), transparent var(--spoiler-grain)),
+    radial-gradient(circle at 83% 17%, var(--spoiler-particle) calc(var(--spoiler-grain) * 0.7), transparent var(--spoiler-grain));
+  background-size: var(--spoiler-tile) var(--spoiler-tile), calc(var(--spoiler-tile) * 1.3) calc(var(--spoiler-tile) * 1.3), calc(var(--spoiler-tile) * 1.7) calc(var(--spoiler-tile) * 1.7), calc(var(--spoiler-tile) * 0.9) calc(var(--spoiler-tile) * 0.9);
+  transition: --spoiler-veil var(--duration-panel) var(--ease-panel);
+}
+.spoiler-text { transition: opacity var(--duration-panel) var(--ease-panel); }
+[data-spoiler] .spoiler:not([data-spoiler-open]) {
+  --spoiler-veil: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  animation: spoiler-grain var(--spoiler-duration) steps(12) infinite;
+}
+/* Opacity hides explicit link/code colours too. Invisible links cannot catch a tap. */
+[data-spoiler] .spoiler:not([data-spoiler-open]) > .spoiler-text { opacity: 0; pointer-events: none; }
+@keyframes spoiler-grain {
+  33% { background-position: 3px -1px, -2px 3px, 1px 2px, -3px -2px; }
+  66% { background-position: -1px 2px, 3px -2px, -2px -1px, 2px 3px; }
+}
+@media print {
+  [data-spoiler] .spoiler { --spoiler-veil: 0; animation: none; }
+  [data-spoiler] .spoiler > .spoiler-text { opacity: 1; }
+}
 /* List markers carry the accent: the bullet and the number belong to the site, not to the browser. */
 .prose ul, .prose ol { padding-left: var(--space-6); }
 .prose ul { list-style-type: disc; }
@@ -643,7 +686,7 @@ a[href^="mailto:"] { padding: 0; border: 0; border-radius: 0; background: transp
 a[aria-current="page"] { color: var(--selected); }
 /* No positioning script: a viewport-aligned note avoids overflow without moving its sentence.
    An attribute also covers sandboxed frames where the scripting media feature is unreliable. */
-.tip:not([data-tip-ready]) > .tip-bubble { position: fixed; inset: auto var(--gutter) var(--space-5); width: auto; max-width: var(--tip-measure); margin-inline: auto; transform: none; }
+.tip:not([data-tip-ready]) > .tip-bubble { position: fixed; inset: auto var(--gutter) var(--space-5); width: auto; max-width: var(--tip-measure); margin-inline: auto; transform: none; animation: none; transition: none; }
 @media (forced-colors: active) {
   :focus-visible { outline-color: Highlight; }
   .button, .content-card, .tip-bubble { border-color: CanvasText; }
@@ -651,4 +694,7 @@ a[aria-current="page"] { color: var(--selected); }
   .brand-dot, .toc a.is-active, .tip-term { color: LinkText; }
   .breadcrumbs-inner { mask-image: none; overflow-x: auto; }
   .hero-art, .quote::after, .empty-decoration { display: none; }
+  /* Windows High Contrast drops our dot fields, so the cover would be an empty gap with nothing behind it: the words
+     are shown instead, and the button stays openable. Same rule weight as the cover, later in the file, so it wins. */
+  [data-spoiler] .spoiler:not([data-spoiler-open]) { background: ButtonFace; outline: var(--line-thin) dotted ButtonText; }
 }

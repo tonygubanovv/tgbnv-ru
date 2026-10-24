@@ -10,7 +10,7 @@ const tags = blogTags.filter(tag => posts.some(post => post.data.tags.includes(t
 ---
 <BaseLayout path="blog/">
   <div class="container page-content"><div class="page-heading"><h1>Блог<span class="brand-dot">.</span></h1><p>Разбираю инструменты и проверяю гипотезы. Рассказываю, как устроен эксперимент и что получилось в результате.</p></div>
-    {tags.length > 0 && <nav class="tags tag-filter" aria-label="Фильтр статей по теме"><button type="button" class="tag" data-all>Все</button>{tags.map(tag => <button type="button" class="tag" data-topic={tagSlug(tag)} aria-pressed="false">{tag}</button>)}</nav>}
+    {tags.length > 0 && <nav class="tags tag-filter" aria-label="Фильтр статей по теме" hidden><button type="button" class="tag" data-all>Все</button>{tags.map(tag => <button type="button" class="tag" data-topic={tagSlug(tag)} aria-pressed="false">{tag}</button>)}</nav>}
     {posts.length ? <div class="card-grid">{posts.map(entry => <ContentCard entry={entry} topics={entry.data.tags.map(tagSlug)} />)}</div> : <EmptyState kind="blog" />}
   </div>
 </BaseLayout>
@@ -29,6 +29,8 @@ const tags = blogTags.filter(tag => posts.some(post => post.data.tags.includes(t
   // «Все» exists for the reader who did not guess that clicking the topic twice clears it. It stays a plain action with no
   // pressed state: an unhighlighted row already says that everything is shown, so a second marker would only lie (owner, 24.10.2026).
   all?.addEventListener('click', () => show(null));
+  const filter = document.querySelector<HTMLElement>('.tag-filter');
+  if (filter) filter.hidden = false;
   // A topic chip inside an article lands here with that topic already applied, and the address goes back to a plain /blog/.
   const incoming = new URLSearchParams(window.location.search).get('topic');
   if (incoming && chips.some(chip => chip.dataset.topic === incoming)) {

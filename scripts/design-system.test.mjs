@@ -3,10 +3,56 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { parse, serialize } from 'parse5';
 import vm from 'node:vm';
+import ts from 'typescript';
 import { applyBlocks } from '../src/utils/blocks.ts';
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 const css = await read('src/styles/global.css');
+const clientScript = source => ts.transpileModule(source.match(/<script>([\s\S]*?)<\/script>/)[1], { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+
+test('blog filters support toggle, All and an incoming topic without changing the listing route', async () => {
+  const chips = ['articles', 'cases'].map(topic => ({ dataset: { topic }, attrs: {}, setAttribute(k,v) { this.attrs[k] = v; }, addEventListener(k,fn) { this[k] = fn; } }));
+  const cards = ['articles', 'articles', 'cases'].map(topics => ({ dataset: { topics }, hidden: false }));
+  const filter = { hidden: true };
+  const all = { addEventListener(k,fn) { this[k] = fn; } };
+  const source = await read('src/pages/blog/index.astro');
+  let address;
+  vm.runInNewContext(clientScript(source), {
+    document: { querySelectorAll: s => s.includes('[data-topic]') ? chips : cards, querySelector: s => s.includes('[data-all]') ? all : filter },
+    URLSearchParams,
+    window: { location: { search: '?topic=cases', pathname: '/blog/' }, history: { replaceState: (_state,_title,path) => { address = path; } } },
+  });
+  assert.equal(filter.hidden, false);
+  assert.equal(address, '/blog/');
+  assert.deepEqual(cards.map(c=>c.hidden), [true,true,false]);
+  assert.equal(chips[1].attrs['aria-pressed'], 'true');
+  chips[1].click();
+  assert.ok(cards.every(c=>!c.hidden), 'Second click clears the filter');
+  chips[0].click();
+  assert.deepEqual(cards.map(c=>c.hidden), [false,false,true]);
+  all.click();
+  assert.ok(cards.every(c=>!c.hidden));
+  assert.ok(chips.every(c=>c.attrs['aria-pressed']==='false'));
+  assert.match(source, /<nav[^>]+class="tags tag-filter"[^>]+hidden>/, 'No dead filter buttons without JS');
+});
+
+test('menu closes when the panel changes layout and Escape restores focus', async () => {
+  const events = {};
+  let focused = false;
+  let change;
+  const menu = { open: true, querySelectorAll: () => [], querySelector: () => ({ focus: () => { focused = true; } }), addEventListener: (name, fn) => { events[name] = fn; } };
+  const header = { addEventListener() {} };
+  vm.runInNewContext(clientScript(await read('src/components/Header.astro')), {
+    document: { querySelector: selector => selector === '.mobile-nav' ? menu : header, addEventListener() {} },
+    window: { scrollY:0, matchMedia: () => ({ addEventListener: (_name,fn) => { change = fn; } }), addEventListener() {} },
+  });
+  change();
+  assert.equal(menu.open, false);
+  menu.open = true;
+  events.keydown({ key:'Escape' });
+  assert.equal(menu.open, false);
+  assert.equal(focused, true);
+});
 
 test('design variables have a definition and token aliases have no dependency cycles', () => {
   const definitions = new Map();

@@ -38,6 +38,8 @@ import MenuLinks from './MenuLinks.astro';
   menu?.addEventListener('focusout', event => {
     if (event.relatedTarget instanceof Node && !menu.contains(event.relatedTarget)) menu.open = false;
   });
+  // The same details changes from a full-width sheet to a card at this boundary.
+  window.matchMedia('(min-width: 1001px)').addEventListener('change', () => { if (menu) menu.open = false; });
   const header = document.querySelector<HTMLElement>('.site-header');
   let lastY = window.scrollY;
   const hideDistance = 120;
@@ -110,7 +112,7 @@ import MenuLinks from './MenuLinks.astro';
   @media (prefers-reduced-motion: reduce) {
     .mobile-nav::details-content, .mobile-menu-panel { transition: none; }
   }
-  :global(body:has(.cookie-notice:not([hidden]))) .mobile-menu-panel { max-height: calc(100dvh - var(--header-h) - var(--menu-gap) - var(--cookie-notice-height, var(--space-7)) - env(safe-area-inset-bottom)); }
+  :global(body:has(.cookie-notice:not([hidden]))) .mobile-menu-panel { max-height: calc(100dvh - var(--header-h) - var(--menu-gap) - var(--cookie-notice-height, var(--space-7))); }
   .mobile-menu-contacts { display: grid; gap: var(--space-2); border-top: var(--line-thin) solid var(--border); padding-top: var(--space-4); margin-top: var(--space-3); }
   .menu-contact-row { display: grid; grid-template-columns: var(--space-5) minmax(0, 1fr); align-items: center; gap: var(--space-2); padding-inline: var(--space-3); border-inline: var(--line-thin) solid transparent; }
   .menu-contact-row > :global(.icon) { justify-self: center; color: var(--muted); }
