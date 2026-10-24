@@ -25,4 +25,10 @@ const tags = blogTags.filter(tag => posts.some(post => post.data.tags.includes(t
     for (const card of cards) card.hidden = topic !== null && !(card.dataset.topics ?? '').split(' ').includes(topic);
   };
   for (const chip of chips) chip.addEventListener('click', () => show(chip.dataset.topic === active ? null : chip.dataset.topic ?? null));
+  // A topic chip inside an article lands here with that topic already applied, and the address goes back to a plain /blog/.
+  const incoming = new URLSearchParams(window.location.search).get('topic');
+  if (incoming && chips.some(chip => chip.dataset.topic === incoming)) {
+    show(incoming);
+    window.history.replaceState(null, '', window.location.pathname);
+  }
 </script>

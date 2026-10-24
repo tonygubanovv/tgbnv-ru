@@ -313,8 +313,10 @@ svg { flex-shrink: 0; }
 /* Tags are quiet labels; only the ones that lead somewhere are clickable and taller. */
 .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5); }
 .tag { display: inline-flex; align-items: center; padding: var(--line-thin) var(--space-2); min-height: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); font-size: var(--text-1); color: var(--muted); line-height: var(--leading-label); }
-button.tag { min-height: var(--space-6); background: transparent; transition: color var(--duration-state), border-color var(--duration-state); }
-@media (hover: hover) and (pointer: fine) { button.tag:hover { color: var(--accent); border-color: var(--accent); } }
+/* A topic is a chip everywhere: the filter button in the blog and the chip in an article share one look, and both answer with colour only. */
+:is(button, a).tag { background: transparent; transition: color var(--duration-state), border-color var(--duration-state); }
+button.tag { min-height: var(--space-6); }
+@media (hover: hover) and (pointer: fine) { :is(button, a).tag:hover { color: var(--accent); border-color: var(--accent); } }
 button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--selected); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); margin-bottom: var(--heading-gap); }
 .section-title { display: flex; gap: var(--space-4); align-items: baseline; min-width: 0; font-size: var(--display-1); }
@@ -355,8 +357,7 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 .content-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
 .card-body { padding: var(--card-padding); }
 /* One quiet technical line above a title: a date, a category, an edition. Used by cards, articles and documents. */
-.meta { display: flex; flex-wrap: wrap; gap: var(--space-4); color: var(--muted); font-size: var(--text-1); }
-.meta > span { color: var(--accent); }
+.meta { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-4); color: var(--muted); font-size: var(--text-1); }
 .content-card :is(h2, h3) { margin-top: var(--space-3); font-size: var(--card-title-size); line-height: var(--leading-card); overflow-wrap: anywhere; }
 .card-body > p { margin-top: var(--space-3); color: var(--foreground); font-size: var(--text-2); line-height: var(--leading-dense); }
 .not-found { padding-block: var(--space-8) var(--space-9); text-align: center; }
@@ -471,11 +472,10 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 .article-share-label { color: var(--muted); font-size: var(--text-2); }
 .article-share-actions { display: flex; align-items: center; }
 .article-share [hidden] { display: none; }
-/* The glyph, not a 44 px padding box, decides the hit area (owner, 24.10.2026): a 32 px square around a 24 px icon
-   still clears WCAG 2.5.8, and the row reads as one line with its label. */
+/* The glyph, not a 44 px padding box, decides the hit area (owner, 24.10.2026): a 32 px square around the ordinary
+   20 px icon still clears WCAG 2.5.8, and the row reads as one line with its label. */
 .article-share-control { position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--share-control-size); height: var(--share-control-size); padding: 0; border: 0; border-radius: var(--radius-md); background: transparent; color: var(--muted); }
 .article-share-control > span:not(.article-share-tooltip):not([hidden]) { display: inline-flex; }
-.article-share-control .icon { width: var(--icon-large); height: var(--icon-large); }
 .article-share-control:focus-visible { color: var(--accent); }
 @media (hover: hover) and (pointer: fine) { .article-share-control:hover { color: var(--accent); } }
 .article-share-tooltip { display: none; position: absolute; bottom: calc(100% + var(--space-1)); right: 0; width: max-content; padding: var(--space-1) var(--space-2); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--foreground); font-size: var(--text-1); line-height: var(--leading-caption); white-space: normal; box-shadow: var(--shadow-feedback); max-width: min(var(--tip-measure), calc(100vw - var(--gutter) * 2)); pointer-events: none; }

@@ -1,6 +1,6 @@
 /** Checks the actual static output for the approved custom domain. */
 import { readFile, access, readdir } from 'node:fs/promises';
-import { site, mainMenu } from '../src/config/site.ts';
+import { site, mainMenu, blogTagSlugs } from '../src/config/site.ts';
 import { closedPaths, legalPaths, movedPaths } from '../src/utils/routes.ts';
 import { checkAnalytics } from './check-analytics.mjs';
 import { parse } from 'parse5';
@@ -279,7 +279,20 @@ for (const page of await walk(dist)) {
     if (!article || article.mainEntityOfPage !== canonicalPrefix + pagePath || !article.headline || !article.image || !article.datePublished || !article.dateModified || !article.author?.url || article.author?.name !== site.author) {
       errors.push(`Missing or incomplete article structured data: ${path}`);
     }
-    if (!nodes.some(node => node.tagName === 'a' && node.attrs.some(attr => attr.name === 'rel' && attr.value === 'author'))) errors.push(`Article author has no visible profile link: ${path}`);
+    // The owner removed the printed byline (24.10.2026): the author lives only in structured data, and the header row keeps the
+    // date plus one chip per topic, which has to land the reader back in the blog with that filter already applied.
+    const header = nodes.find(node => node.tagName === 'header' && (node.attrs?.find(attr => attr.name === 'class')?.value ?? '').split(/\s+/).includes('publication-header'));
+    if (!header) errors.push(`Article has no header block: ${path}`);
+    else {
+      if (/Автор/.test(textChunks(header).join(''))) errors.push(`Article header still prints a byline: ${path}`);
+      const chips = elements(header).filter(node => node.tagName === 'a' && (node.attrs?.find(attr => attr.name === 'class')?.value ?? '').split(/\s+/).includes('tag'));
+      if (!chips.length) errors.push(`Article header carries no topic chip: ${path}`);
+      const topicSlugs = new Set(Object.values(blogTagSlugs));
+      for (const chip of chips) {
+        const [page, query] = (chip.attrs?.find(attr => attr.name === 'href')?.value ?? '').split('?');
+        if (page !== '/blog/' || !topicSlugs.has(new URLSearchParams(query).get('topic') ?? '')) errors.push(`Article topic chip does not return to a filtered blog: ${path}`);
+      }
+    }
   }
   if (path === 'index.html' && !structured.some(graph => graph['@type'] === 'Person' && graph.name === site.author)) errors.push('Home page must identify the real author');
   if (path === 'index.html' && !structured.some(graph => graph['@type'] === 'WebSite' && graph.inLanguage === site.locale.language && graph.audience?.geographicArea?.identifier === site.locale.countryCode)) errors.push('WebSite must declare Russian language and the Russian audience');

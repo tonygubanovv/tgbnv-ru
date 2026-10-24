@@ -56,7 +56,7 @@ export const skillGroups = [
 
 /** Share destinations use ordinary links; no third-party widgets are loaded. */
 export const shareServices = [
-  { label: 'Telegram', icon: 'telegram', endpoint: 'https://t.me/share/url', urlParam: 'url', titleParam: 'text' },
+  { label: 'Telegram', icon: 'telegram-plane', endpoint: 'https://t.me/share/url', urlParam: 'url', titleParam: 'text' },
   { label: 'ВКонтакте', icon: 'vk', endpoint: 'https://vk.com/share.php', urlParam: 'url', titleParam: 'title' },
 ] as const;
 
