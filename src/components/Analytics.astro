@@ -22,8 +22,9 @@ const { consentVersion, consentDays } = site.legal;
     let returnFocus = null;
     // The band wraps on narrow screens, so the space under the footer follows its real height.
     function reserveSpace() {
-      if (!notice || notice.hidden || !notice.offsetHeight) return;
-      document.body.style.setProperty('--cookie-notice-height', notice.offsetHeight + 'px');
+      if (!notice) return;
+      // The root shares this measurement with scroll-padding, body and the mobile menu.
+      document.documentElement.style.setProperty('--cookie-notice-height', (notice.hidden ? 0 : notice.offsetHeight) + 'px');
     }
     if (notice && window.ResizeObserver) new ResizeObserver(reserveSpace).observe(notice);
     function readChoice() {

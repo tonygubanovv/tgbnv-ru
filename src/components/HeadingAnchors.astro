@@ -19,6 +19,7 @@ import Icon from './Icon.astro';
       if (button.dataset.copyState === 'copying') return;
       window.clearTimeout(timer);
       button.dataset.copyState = 'copying';
+      button.setAttribute('aria-busy', 'true');
       try {
         // Keep the readable heading slug; the browser handles Cyrillic fragments on arrival.
         await copyText(`${location.origin}${location.pathname}#${heading.id}`);
@@ -29,8 +30,10 @@ import Icon from './Icon.astro';
       } catch {
         button.dataset.copyState = 'error';
         button.title = 'Не удалось скопировать ссылку';
+        button.setAttribute('aria-label', button.title);
         if (status) status.textContent = button.title;
       }
+      button.removeAttribute('aria-busy');
       timer = window.setTimeout(() => {
         delete button.dataset.copyState;
         button.title = 'Скопировать ссылку на раздел';

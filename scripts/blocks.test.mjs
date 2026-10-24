@@ -70,7 +70,7 @@ test('Only article content is rewritten, the rest of the page is untouched', () 
 
 test('A marker after a word hides the note in a card', () => {
   const result = render('<p>Мы меряем UTM{{метка в адресе ссылки}} в кампаниях.</p>');
-  assert.match(result, /Мы меряем <span class="tip"><span tabindex="0" aria-describedby="tip-1" class="tip-term">UTM<\/span><span class="tip-bubble" role="tooltip" id="tip-1"> метка в адресе ссылки<\/span>/u);
+  assert.match(result, /Мы меряем <span class="tip"><span tabindex="0" aria-describedby="tip-1" class="tip-term">UTM<\/span><span class="tip-bubble" role="note" aria-label="Пояснение" id="tip-1"> метка в адресе ссылки<\/span>/u);
   assert.match(result, /<\/span> в кампаниях\.<\/p>/u);
   assert.doesNotMatch(result, /\{\{/u);
   // The card is not part of the sentence: with the hidden card taken away the words read in their own order.
@@ -82,7 +82,7 @@ test('A marker after a word hides the note in a card', () => {
 
 test('The dot after the word stays in the sentence, a marked-up word becomes the hint itself', () => {
   const fullStop = render('<p>Метрика.{{счётник на сайте}}</p>');
-  assert.match(fullStop, /<span tabindex="0" aria-describedby="tip-1" class="tip-term">Метрика<\/span><span class="tip-bubble" role="tooltip" id="tip-1"> счётник на сайте<\/span><\/span>\./u);
+  assert.match(fullStop, /<span tabindex="0" aria-describedby="tip-1" class="tip-term">Метрика<\/span><span class="tip-bubble" role="note" aria-label="Пояснение" id="tip-1"> счётник на сайте<\/span><\/span>\./u);
   const bold = render('<p>Про <strong>лид</strong>{{клик по объявлению}}</p>');
   assert.match(bold, /<span class="tip"><strong tabindex="0" aria-describedby="tip-1" class="tip-term">лид<\/strong>/u);
 });
@@ -101,7 +101,7 @@ test('A marker with nothing to hide, no word before it, or no closing brace stay
 
 test('A hidden note may carry a link, and the link keeps working inside the card', () => {
   const result = render('<p>Мы меряем UTM{{метка в <a href="https://example.com" target="_blank" rel="noopener noreferrer">адресе</a> ссылки}} в кампаниях.</p>');
-  assert.match(result, /<span class="tip-bubble" role="tooltip" id="tip-1"> метка в <a href="https:\/\/example\.com" target="_blank" rel="noopener noreferrer">адресе<\/a> ссылки<\/span>/u);
+  assert.match(result, /<span class="tip-bubble" role="note" aria-label="Пояснение" id="tip-1"> метка в <a href="https:\/\/example\.com" target="_blank" rel="noopener noreferrer">адресе<\/a> ссылки<\/span>/u);
   assert.match(result, /Мы меряем <span class="tip"><span tabindex="0" aria-describedby="tip-1" class="tip-term">UTM<\/span>/u);
   assert.doesNotMatch(result, /\{\{|\}\}/u);
   assert.match(result, /<\/span> в кампаниях\.<\/p>/u);
@@ -109,7 +109,7 @@ test('A hidden note may carry a link, and the link keeps working inside the card
 
 test('Markdown glues a bare address and the closing braces into one link: the card still opens, the address stays clean', () => {
   const result = render('<p>Бот на базе Salesbot{{Именно Salesbot, а не Salebot от <a href="https://salebot.pro%7D%7D" target="_blank" rel="noopener noreferrer">https://salebot.pro}}</a>, то источники теряются.</p>');
-  assert.match(result, /<span class="tip-bubble" role="tooltip" id="tip-1"> Именно Salesbot, а не Salebot от <a href="https:\/\/salebot\.pro" target="_blank" rel="noopener noreferrer">https:\/\/salebot\.pro<\/a><\/span>/u);
+  assert.match(result, /<span class="tip-bubble" role="note" aria-label="Пояснение" id="tip-1"> Именно Salesbot, а не Salebot от <a href="https:\/\/salebot\.pro" target="_blank" rel="noopener noreferrer">https:\/\/salebot\.pro<\/a><\/span>/u);
   assert.match(result, /class="tip-term">Salesbot<\/span>/u);
   assert.doesNotMatch(result, /%7D|salebot\.pro\}\}/u);
   assert.match(result, /<\/span>, то источники теряются\.<\/p>/u);

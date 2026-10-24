@@ -22,13 +22,15 @@ export function checkAnalytics(html, site, hostname) {
     storage.theme = 'dark';
     if (choice !== undefined) storage[key] = typeof choice === 'string' ? choice : JSON.stringify(choice);
     for (const selector of ['[data-cookie-notice]', '[data-cookie-accept]', '[data-cookie-decline]', '[data-cookie-settings]']) {
-      elements[selector] = { hidden: true, events: {}, addEventListener(type, fn) { this.events[type] = fn; }, focus() {} };
+      elements[selector] = { hidden: true, offsetHeight: 77, events: {}, addEventListener(type, fn) { this.events[type] = fn; }, focus() {} };
     }
     let reloads = 0;
+    const measured = {};
     const context = {
       location: { hostname: host, href: 'https://' + host + '/', reload: () => reloads++ },
       localStorage: storage,
       document: {
+        documentElement: { style: { setProperty: (name, value) => { measured[name] = value; } } },
         scripts: [], cookie: '', referrer: '', hidden: false,
         querySelector: selector => elements[selector],
         querySelectorAll: selector => elements[selector] ? [elements[selector]] : [],
@@ -40,14 +42,16 @@ export function checkAnalytics(html, site, hostname) {
     };
     context.window = context;
     runInNewContext(code, context, { timeout: 1000 });
-    return { context, storage, inserted, elements, listeners, reloads: () => reloads, click: name => elements[`[data-cookie-${name}]`].events.click() };
+    return { context, storage, inserted, elements, listeners, measured, reloads: () => reloads, click: name => elements[`[data-cookie-${name}]`].events.click() };
   }
   try {
     const first = harness();
     assert.equal(first.inserted.length, 0, 'No tracker before choice');
     assert.equal(first.elements['[data-cookie-notice]'].hidden, false);
+    assert.equal(first.measured['--cookie-notice-height'], '77px', 'Actual wrapped band height reaches the root');
     first.click('decline');
     assert.equal(first.inserted.length, 0, 'No tracker after refusal');
+    assert.equal(first.measured['--cookie-notice-height'], '0px', 'Hidden band releases its scroll offset');
     assert.equal(JSON.parse(first.storage[key]).accepted, false);
     assert.equal(first.storage.theme, 'dark', 'Theme survives cleanup');
     first.click('settings');

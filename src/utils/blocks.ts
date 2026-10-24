@@ -77,7 +77,8 @@ const asTerm = (node: Element, id: string): Element => {
     The card is a block when it opens, so that space is never painted. */
 function tipCard(id: string, hidden: Child[], term: Element): Element {
   const wrap = shell('<span class="tip"></span>');
-  const bubble = shell(`<span class="tip-bubble" role="tooltip" id="${id}"></span>`);
+  // Notes can contain real links: role=tooltip would incorrectly promise noninteractive content.
+  const bubble = shell(`<span class="tip-bubble" role="note" aria-label="Пояснение" id="${id}"></span>`);
   return move(wrap, [term, move(bubble, [textNode(' ', bubble), ...hidden])]);
 }
 
@@ -321,9 +322,9 @@ const TIP_SCRIPT = `(function () {
   // A card that a pointer holds open does not go away when the page moves: under a finger the hover sticks, on a
   // computer the cursor simply still sits on the word. So closing stows every card, and only a pointer or keyboard
   // that comes back to the word — or a new tap — clears the stow.
-  function stow(tip) { tip.removeAttribute('data-tip-open'); tip.setAttribute('data-tip-stowed', 'true'); }
+  function stow(tip) { tip.removeAttribute('data-tip-open'); tip.setAttribute('data-tip-stowed', 'true'); tip.querySelector('.tip-term').setAttribute('aria-expanded', 'false'); }
   function close() { tips.forEach(stow); }
-  function release(tip) { tip.removeAttribute('data-tip-stowed'); }
+  function release(tip) { tip.removeAttribute('data-tip-stowed'); tip.querySelector('.tip-term').setAttribute('aria-expanded', 'true'); }
   function place(tip) {
     var bubble = tip.querySelector('.tip-bubble');
     bubble.style.removeProperty('--tip-shift');
@@ -339,12 +340,27 @@ const TIP_SCRIPT = `(function () {
     if (edge > box.top) tip.setAttribute('data-tip-below', 'true');
   }
   tips.forEach(function (tip) {
+    tip.setAttribute('data-tip-ready', 'true');
+    var term = tip.querySelector('.tip-term');
+    var bubble = tip.querySelector('.tip-bubble');
+    // Progressive disclosure: without JS the term remains focusable with a readable description.
+    term.setAttribute('role', 'button');
+    term.setAttribute('aria-controls', bubble.id);
+    term.setAttribute('aria-expanded', 'false');
+    term.removeAttribute('aria-describedby');
     function show() { release(tip); place(tip); }
-    tip.addEventListener('pointerenter', show);
+    tip.addEventListener('pointerenter', function (event) { if (event.pointerType === 'mouse') show(); });
+    tip.addEventListener('pointerleave', function () {
+      if (!tip.contains(document.activeElement) && !tip.hasAttribute('data-tip-open')) stow(tip);
+    });
     // After a scroll-close the cursor never left the word, so pointerenter will not come again: the first mouse
     // move over it wakes the card. A touch scroll also moves the pointer, so touches are deliberately left out.
     tip.addEventListener('pointermove', function (event) { if (event.pointerType === 'mouse') show(); });
     tip.addEventListener('focusin', show);
+    tip.addEventListener('focusout', function (event) { if (!tip.contains(event.relatedTarget)) stow(tip); });
+    term.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); term.click(); }
+    });
     tip.addEventListener('click', function (event) {
       // A link written inside the hidden text stays a link: the tap that already opened the card must not eat it.
       if (event.target instanceof Element && event.target.closest('.tip-bubble')) return;
@@ -360,7 +376,12 @@ const TIP_SCRIPT = `(function () {
   document.addEventListener('click', function (event) {
     if (event.target instanceof Element && !event.target.closest('.tip')) close();
   });
-  document.addEventListener('keydown', function (event) { if (event.key === 'Escape') close(); });
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    var held = document.activeElement instanceof Element ? document.activeElement.closest('.tip') : null;
+    if (held && document.activeElement.closest('.tip-bubble')) held.querySelector('.tip-term').focus();
+    close();
+  });
   // A card belongs to the moment it was opened: once the page moves, it hangs over the wrong line, so it goes away.
   // Capture sees every scroller on the page, because a scroll event does not bubble.
   // A keyboard reader keeps the focus while the page moves under them, so the card of the focused word is left alone.

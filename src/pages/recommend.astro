@@ -15,10 +15,10 @@ import { recommendations } from '../config/site';
   .recommendation-heading { margin-bottom: var(--space-5); }
   .recommendation-heading > p:last-child { margin-top: var(--space-3); color: var(--muted); }
   .recommendation-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) var(--space-7); list-style: none; margin: 0; padding: 0; }
-  .recommendation-list li { border-top: 1px solid var(--border); padding-top: var(--space-2); }
+  .recommendation-list li { border-top: var(--line-thin) solid var(--border); padding-top: var(--space-2); }
   .recommendation-list h2 { font-size: var(--text-5); }
   .recommendation-list a { display: inline-flex; align-items: center; min-height: var(--tap); }
-  .recommendation-list p { margin: 0; color: var(--muted); font-size: var(--text-2); line-height: 1.6; }
+  .recommendation-list p { margin: 0; color: var(--muted); font-size: var(--text-2); line-height: var(--leading-dense); }
   @media (max-width: 700px) {
     .recommendation-list { grid-template-columns: 1fr; }
   }

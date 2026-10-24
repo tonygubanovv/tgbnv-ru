@@ -44,15 +44,20 @@ const destinations = shareServices.map(service => {
       icon.hidden = false;
       check.hidden = true;
       delete button.dataset.copyState;
+      button.dataset.copyResult = 'copying';
+      button.setAttribute('aria-busy', 'true');
       try {
         await copyText(button.dataset.copyArticle!);
         icon.hidden = true;
         check.hidden = false;
+        button.dataset.copyResult = 'success';
         status.textContent = root.querySelector<HTMLTemplateElement>('[data-share-success]')!.content.textContent;
       } catch {
+        button.dataset.copyResult = 'error';
         status.textContent = root.querySelector<HTMLTemplateElement>('[data-share-error]')!.content.textContent;
       } finally {
         busy = false;
+        button.removeAttribute('aria-busy');
       }
       feedback.textContent = status.textContent;
       button.dataset.copyState = 'feedback';
@@ -62,6 +67,7 @@ const destinations = shareServices.map(service => {
         status.textContent = '';
         feedback.textContent = root.querySelector<HTMLTemplateElement>('[data-share-default]')!.content.textContent;
         delete button.dataset.copyState;
+        delete button.dataset.copyResult;
       }, 2600);
     });
     root.addEventListener('keydown', event => {

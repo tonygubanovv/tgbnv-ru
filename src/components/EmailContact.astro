@@ -44,6 +44,7 @@ const { tooltipId } = Astro.props;
       if (button.dataset.copyState === 'copying') return;
       window.clearTimeout(timer);
       button.dataset.copyState = 'copying';
+      button.setAttribute('aria-busy', 'true');
       const email = button.dataset.copyEmail!;
       try {
         await copyText(email);
@@ -54,8 +55,10 @@ const { tooltipId } = Astro.props;
       } catch {
         button.dataset.copyState = 'error';
         tooltip.textContent = 'Не удалось скопировать почту';
+        button.setAttribute('aria-label', tooltip.textContent);
         if (status) status.textContent = 'Не удалось скопировать почту';
       }
+      button.removeAttribute('aria-busy');
       tooltip.hidden = false;
       timer = window.setTimeout(reset, 1600);
     });

@@ -1,0 +1,6 @@
+<script is:inline>
+  try {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+  } catch { /* System theme remains available without storage. */ }
+</script>

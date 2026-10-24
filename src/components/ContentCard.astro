@@ -7,7 +7,8 @@ interface Props { entry: CollectionEntry<'blog'>; heading?: 'h2' | 'h3' }
 const { entry, heading: Heading = 'h2' } = Astro.props;
 const { data } = entry;
 // Three columns on a wide screen, two in the middle, one on a phone: the browser picks the variant by these widths.
-const cardSizes = '(min-width: 1001px) 352px, (min-width: 701px) 47vw, calc(100vw - 48px)';
+// Mirrors global.css's capped container, gutters and gaps. The invariant test guards these boundaries.
+const cardSizes = '(min-width: 1296px) 384px, (min-width: 1001px) calc((100vw - 144px) / 3), (min-width: 701px) calc((100vw - 88px) / 2), calc(100vw - 48px)';
 ---
 <article class="content-card">
   <Image src={data.cover.src} alt={data.cover.alt} widths={[400, 720, 1080]} sizes={cardSizes} quality={72} loading="lazy" decoding="async" />

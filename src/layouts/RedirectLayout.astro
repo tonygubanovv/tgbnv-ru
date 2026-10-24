@@ -2,6 +2,8 @@
 import { movedPaths } from '../utils/routes';
 import { absoluteUrl, url } from '../utils/urls';
 import { site } from '../config/site';
+import ThemeInit from '../components/ThemeInit.astro';
+import '../styles/global.css';
 
 // Registered from movedPaths by Astro: one template for every previous address.
 const current = Astro.url.pathname.replace(/\/$/, '');
@@ -15,13 +17,15 @@ const target = url(to);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <ThemeInit />
     <title>Страница переехала</title>
     <meta name="description" content="Страница переехала. Сейчас перенаправлю на новый адрес." />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href={absoluteUrl(to)} />
     <meta http-equiv="refresh" content={`0;url=${target}`} />
   </head>
-  <body>
+  <body class="redirect-page container page-content">
     <h1>Страница переехала</h1>
     <p>Перейти по адресу <a href={target}>{target}</a>.</p>
   </body>

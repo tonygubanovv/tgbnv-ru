@@ -13,6 +13,25 @@ export default defineConfig({
   base: '/',
   trailingSlash: 'always',
   output: 'static',
+  // Shiki accepts a TextMate theme with CSS variables. Generated spans follow the page theme,
+  // including system/no-JS mode; the actual colour values live only in global.css.
+  markdown: {
+    shikiConfig: {
+      theme: {
+        name: 'agubanov',
+        type: 'dark',
+        colors: { 'editor.background': 'var(--code-background)', 'editor.foreground': 'var(--code-foreground)' },
+        tokenColors: [
+          { scope: ['comment', 'punctuation.definition.comment'], settings: { foreground: 'var(--code-comment)' } },
+          { scope: ['string'], settings: { foreground: 'var(--code-string)' } },
+          { scope: ['keyword', 'storage'], settings: { foreground: 'var(--code-keyword)' } },
+          { scope: ['entity.name.function', 'support.function'], settings: { foreground: 'var(--code-function)' } },
+          { scope: ['constant', 'support.constant'], settings: { foreground: 'var(--code-constant)' } },
+          { scope: ['punctuation'], settings: { foreground: 'var(--code-punctuation)' } },
+        ],
+      },
+    },
+  },
   // Covers arrive as 2,7 MB PNGs, so the build re-encodes them and the browser picks a variant by width.
   // Sharp stays on purpose: the owner asked for optimization on 22.10.2026, do not put the noop service back.
   image: { service: { entrypoint: 'astro/assets/services/sharp' } },

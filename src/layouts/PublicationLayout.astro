@@ -39,7 +39,7 @@ const jsonLd = {
       <header class="publication-header"><div class="meta"><time datetime={data.date}>{dateLabel(data.date)}</time><span>{data.category}</span></div><h1 data-preserve-text={preserveText ? 'true' : undefined}>{data.title}</h1><p class="publication-summary">{data.summary}</p>{site.author && <p class="muted">Автор: <a href={`${url('')}#about`} rel="author">{site.author}</a></p>}{'updated' in data && data.updated && <p class="muted">Обновлено: <time datetime={data.updated}>{dateLabel(data.updated)}</time></p>}
         {data.tags.length > 0 && <div class="tags">{data.tags.map(tag => <a class="tag" href={url(`blog/tags/${tagSlug(tag)}/`)}>{tag}</a>)}</div>}
       </header>
-      {data.cover && <Image class="publication-cover" src={data.cover.src} alt={data.cover.alt} widths={[720, 1440]} sizes="(max-width: 700px) calc(100vw - 48px), 720px" quality={74} loading="eager" decoding="async" />}
+      {data.cover && <Image class="publication-cover" src={data.cover.src} alt={data.cover.alt} widths={[720, 1440]} sizes="(max-width: 700px) calc(100vw - 48px), (max-width: 784px) calc(100vw - 64px), 720px" quality={74} loading="eager" decoding="async" />}
       <div class="prose" data-preserve-text={preserveText ? 'true' : undefined}><Content /></div>
       <HeadingAnchors />
       <ArticleShare path={path} title={data.title} />
@@ -73,7 +73,10 @@ const jsonLd = {
         if (!atBottom) {
           active = heads[0];
           for (const heading of heads) {
-            if (heading.getBoundingClientRect().top > 140) break;
+            const header = document.querySelector('.site-header');
+            const visible = header && (!header.classList.contains('is-hidden') || header.matches(':focus-within'));
+            const offset = (visible ? header.getBoundingClientRect().height : 0) + parseFloat(getComputedStyle(nav).getPropertyValue('--toc-gap'));
+            if (heading.getBoundingClientRect().top > offset) break;
             active = heading;
           }
         }
