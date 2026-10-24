@@ -3,7 +3,7 @@ title: "Что такое LLMs.txt и почему он бесполезен д
 summary: "Проверил с командой, нужен ли llms.txt для GEO: добавили файл на сайт, спрятали пасхалку и посмотрели логи. Делюсь тем, что получилось."
 date: "2026-10-22"
 category: "SEO & GEO"
-tags: ["Нейросети", "SEO & GEO"]
+tags: ["Статьи"]
 featured: true
 preserveText: true
 cover: {"src":"./llms-txt-useless-green.png","alt":"Роботы проходят мимо терминала llms.txt к входу robots.txt"}

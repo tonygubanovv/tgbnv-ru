@@ -1,11 +1,9 @@
 /** Shared blog topics in their public display order. */
-export const blogTags = ['Telegram Ads', 'Нейросети', 'SEO & GEO', 'Кейсы'] as const;
+export const blogTags = ['Статьи', 'Кейсы'] as const;
 
-/** Stable public addresses, independent of the displayed topic names. */
+/** Latin tokens the topic filter puts into data attributes, independent of the displayed names. */
 export const blogTagSlugs: Record<(typeof blogTags)[number], string> = {
-  'Telegram Ads': 'telegram-ads',
-  'Нейросети': 'neuroseti',
-  'SEO & GEO': 'seo-geo',
+  'Статьи': 'articles',
   'Кейсы': 'cases',
 };
 

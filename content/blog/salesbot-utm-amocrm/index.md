@@ -4,7 +4,7 @@ title: "Как передать UTM-метки из Telegram в Salesbot amoCRM 
 summary: "Разбираю, как передать UTM-метки из Telegram-бота в amoCRM через Salesbot и не терять источники лидов"
 date: "2026-10-22"
 category: "Инструкции"
-tags: []
+tags: ["Статьи"]
 cover: {"src":"./salesbot-utm-amocrm-cover.png","alt":"Светящаяся UTM-метка в сканере связывает сообщения бота с карточками контактов CRM"}
 ---
 

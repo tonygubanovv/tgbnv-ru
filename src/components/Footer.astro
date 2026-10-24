@@ -5,8 +5,11 @@ import ThemeToggle from './ThemeToggle.astro';
 ---
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div><a class="footer-name" href={url()}>{site.name}<span class="brand-dot">.</span></a><p>{site.role}. Статьи и кейсы.</p></div>
-    <nav aria-label="Ссылки в подвале">{contactLinks().map(link => <a href={link.url}>{link.label}</a>)}{site.navigation.map(item => <a href={url(item.path)}>{item.label}</a>)}</nav>
+    <a class="footer-name" href={url()}>{site.name}<span class="brand-dot">.</span></a>
+    <nav class="footer-groups" aria-label="Ссылки в подвале">
+      <div class="footer-group"><p class="group-label">Контакты</p><div class="footer-links">{contactLinks().map(link => <a href={link.url}>{link.label}</a>)}</div></div>
+      <div class="footer-group"><p class="group-label">Разделы</p><div class="footer-links">{site.navigation.map(item => <a href={url(item.path)}>{item.label}</a>)}</div></div>
+    </nav>
   </div>
   <div class="container footer-bottom"><span>© {new Date().getFullYear()} {site.author ?? site.name}</span><div class="footer-tools"><a href={url('legal/')}>Документы</a><button class="cookie-settings" data-cookie-settings type="button" hidden>Настроить cookie</button><ThemeToggle /></div></div>
 </footer>

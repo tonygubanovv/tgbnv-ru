@@ -15,7 +15,7 @@ import MenuLinks from './MenuLinks.astro';
       <nav class="mobile-menu-panel" aria-label="Основная навигация">
         <MenuLinks items={mainMenu} />
         <div class="mobile-menu-contacts">
-          <p class="menu-label">Связаться</p>
+          <p class="group-label">Связаться</p>
           {links.email && <div class="menu-contact-row"><Icon name="mail" size={20} /><EmailContact tooltipId="menu-email-tooltip" /></div>}
           {links.telegram && <div class="menu-contact-row"><Icon name="telegram-plane" size={28} /><a href={links.telegram} target="_blank" rel="noopener noreferrer">Telegram</a></div>}
         </div>
@@ -112,7 +112,6 @@ import MenuLinks from './MenuLinks.astro';
   }
   :global(body:has(.cookie-notice:not([hidden]))) .mobile-menu-panel { max-height: calc(100dvh - var(--header-h) - var(--menu-gap) - var(--cookie-notice-height, var(--space-7)) - env(safe-area-inset-bottom)); }
   .mobile-menu-contacts { display: grid; gap: var(--space-2); border-top: var(--line-thin) solid var(--border); padding-top: var(--space-4); margin-top: var(--space-3); }
-  .menu-label { color: var(--muted); font-size: var(--text-1); }
   .menu-contact-row { display: grid; grid-template-columns: var(--space-5) minmax(0, 1fr); align-items: center; gap: var(--space-2); padding-inline: var(--space-3); border-inline: var(--line-thin) solid transparent; }
   .menu-contact-row > :global(.icon) { justify-self: center; color: var(--muted); }
   .menu-contact-row :global(a) { display: flex; align-items: center; min-height: var(--tap); font-size: var(--text-2); font-weight: var(--weight-medium); overflow-wrap: anywhere; color: var(--foreground); }

@@ -328,9 +328,11 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 .site-footer { background: var(--background); border-top: var(--line-thin) solid var(--border); }
 .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-7); }
 .footer-name { font-size: var(--text-4); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); }
-.footer-inner p { font-size: var(--text-1); color: var(--muted); margin-top: var(--space-1); }
-.footer-inner nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-6); font-size: var(--text-2); }
-.footer-inner nav a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--tap); }
+.group-label { color: var(--muted); font-size: var(--text-1); }
+.footer-groups { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-4) var(--space-7); }
+.footer-group { display: grid; gap: var(--space-2); }
+.footer-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font-size: var(--text-2); }
+.footer-links a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--tap); }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-4); border-top: var(--line-thin) solid var(--border); font-size: var(--text-1); color: var(--muted); flex-wrap: wrap; }
 .page-content { padding-block: var(--space-5) var(--space-9); min-height: var(--listing-min-height); }
 .redirect-page h1 { font-size: var(--display-2); margin-bottom: var(--heading-gap); }
@@ -518,7 +520,7 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
   .contact-section { margin-block: var(--space-7); display: block; padding-top: var(--space-6); }
   .contact-links { margin-top: var(--space-5); }
   .footer-inner { align-items: start; flex-direction: column; padding-block: var(--space-6) var(--space-5); gap: var(--space-4); }
-  .footer-inner nav { gap: var(--space-2) var(--space-6); }
+  .footer-groups { justify-content: flex-start; }
   .page-content { padding-block: var(--space-4) var(--space-8); }
   .page-heading { margin-bottom: var(--space-6); }
   .card-grid { grid-template-columns: 1fr; }
