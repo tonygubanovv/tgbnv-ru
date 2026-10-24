@@ -55,7 +55,7 @@ test('text, syntax, feedback and necessary control borders meet their contrast r
   const mix = (a,b,part) => a.map((n,i) => n*part+b[i]*(1-part));
   for (const theme of [
     { bg:'paper', surfaces:['white','mist'], ink:'ink', muted:'olive', accent:'green', on:'white', syntax:['purple','blue','brown','red'] },
-    { bg:'night', surfaces:['forest','moss','neutral'], ink:'snow', muted:'gray', accent:'lime', on:'on-lime', syntax:['lilac','sky','sand','rose'] },
+    { bg:'night', surfaces:['forest','moss','neutral','graphite'], ink:'snow', muted:'gray', accent:'lime', on:'on-lime', syntax:['lilac','sky','sand','rose'] },
   ]) {
     const surfaces = [colors[theme.bg], ...theme.surfaces.map(n=>colors[n])];
     for (const role of [theme.ink,theme.muted,theme.accent,...theme.syntax]) for (const surface of surfaces) {

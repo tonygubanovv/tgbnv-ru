@@ -14,7 +14,7 @@ const destinations = shareServices.map(service => {
 });
 ---
 <div class="article-share" data-article-share>
-  <span class="article-share-label">Поделиться</span>
+  <span class="article-share-label">Поделиться:</span>
   <nav class="article-share-actions" aria-label="Поделиться статьёй">
     {destinations.map(destination => <a class="article-share-control" href={destination.href} target="_blank" rel="noopener noreferrer" aria-label={`Поделиться в ${destination.label}`} aria-describedby={`share-${destination.icon}`}><Icon name={destination.icon} /><span class="article-share-tooltip" role="tooltip" id={`share-${destination.icon}`}>{destination.label}</span></a>)}
     <button class="article-share-control" type="button" data-copy-article={address} aria-label="Скопировать ссылку на статью" aria-describedby="share-copy" hidden><span data-copy-icon><Icon name="link" /></span><span data-copy-check hidden><Icon name="check" /></span><span class="article-share-tooltip" role="tooltip" id="share-copy" data-copy-feedback>Скопировать ссылку</span></button>

@@ -26,6 +26,7 @@
   --color-forest: #151c15;
   --color-moss: #202a1e;
   --color-neutral: #1f1f1f;
+  --color-graphite: #262626;
   --color-snow: #f5f5f5;
   --color-gray: #a1a1a1;
   --color-line-dark: #333333;
@@ -114,6 +115,10 @@
   --surface: light-dark(var(--color-white), var(--color-forest));
   --card-background: light-dark(var(--color-white), var(--color-neutral));
   --elevated: light-dark(var(--color-mist), var(--color-moss));
+  /* Owner, 24.10.2026: everything set into the article column as an insertion — a code block, a note card, an inline mark —
+     sits on one neutral gray in the dark theme, so nothing in an article carries a green cast. */
+  --code-block: light-dark(var(--color-white), var(--color-graphite));
+  --code-mark: light-dark(var(--color-mist), var(--color-graphite));
   --foreground: light-dark(var(--color-ink), var(--color-snow));
   --muted: light-dark(var(--color-olive), var(--color-gray));
   --muted-on-tint: color-mix(in srgb, var(--muted) 95%, var(--foreground));
@@ -173,6 +178,7 @@
   --tooltip-shadow: var(--shadow-panel);
   --toc-gap: var(--space-6);
   --copy-email-size: 22px; /* Owner exception: do not silently enlarge. */
+  --share-control-size: var(--space-6);
   --cookie-control-height: var(--space-6);
   --feedback-measure: calc(var(--tip-measure) - var(--space-9));
   --icon-small: var(--text-2);
@@ -193,7 +199,7 @@
   --empty-description-measure: 570px;
 
   /* Shiki emits these roles directly into pre/span styles. No hex overrides or !important. */
-  --code-background: var(--surface);
+  --code-background: var(--code-block);
   --code-foreground: var(--foreground);
   --code-comment: var(--muted);
   --code-string: var(--accent);
@@ -374,15 +380,15 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 .muted { color: var(--muted); }
 .publication-cover { width: 100%; border-radius: var(--radius-md); margin-bottom: var(--space-7); }
 /* The contents hang under the sticky header and rise into the freed space as soon as the header scrolls away. */
-.toc { position: sticky; top: calc(var(--header-h) + var(--toc-gap)); max-height: calc(100dvh - var(--header-h) - var(--toc-gap) * 2); overflow-y: auto; padding-right: var(--space-2); font-size: var(--text-3); line-height: var(--leading-toc); color: var(--muted); transition: top var(--duration-panel) var(--ease-panel); }
+.toc { position: sticky; top: calc(var(--header-h) + var(--toc-gap)); max-height: calc(100dvh - var(--header-h) - var(--toc-gap) * 2); overflow-y: auto; padding-right: var(--space-2); font-size: var(--text-2); line-height: var(--leading-toc); color: var(--muted); transition: top var(--duration-panel) var(--ease-panel); }
 body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); }
-/* The heading of the contents stays smaller than the site logo in the header. */
+/* The heading of the contents stays smaller than the site logo in the header, and every item a rung under it (owner, 24.10.2026). */
 .toc h2 { font-size: var(--text-4); font-weight: var(--weight-heading); line-height: var(--leading-heading); letter-spacing: var(--tracking-heading); margin-bottom: var(--space-3); color: var(--foreground); }
 .toc ul { list-style: none; padding: 0; }
 .toc a { display: block; padding: var(--space-1) 0; transition: color var(--duration-state) var(--ease-panel); }
 @media (hover: hover) and (pointer: fine) { .toc a:hover { color: var(--foreground); } }
 .toc a.is-active { color: var(--selected); }
-.toc .toc-sub { margin-left: var(--space-4); font-size: var(--text-2); }
+.toc .toc-sub { margin-left: var(--space-4); font-size: var(--text-1); }
 .prose { font-size: var(--prose-size); line-height: var(--leading-prose); overflow-wrap: anywhere; }
 .prose > * + * { margin-top: var(--stack-gap); }
 .prose h2 { font-size: var(--prose-h2-size); margin-top: var(--space-7); }
@@ -431,11 +437,11 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 .prose ul ul { list-style-type: circle; }
 .prose ol ol { list-style-type: lower-alpha; }
 .prose li + li { margin-top: var(--space-2); }
-.prose blockquote { border-left: var(--line-quote) solid var(--accent); background: var(--surface); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: var(--space-5) var(--space-6); color: var(--foreground); }
-/* A quote card: a tinted panel, the speaker under the words, and a large mark in the free corner.
+.prose blockquote { border-left: var(--line-quote) solid var(--accent); background: var(--card-background); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: var(--space-5) var(--space-6); color: var(--foreground); }
+/* A quote card: a neutral panel, the speaker under the words, and a large green mark in the free corner.
    The HTML spec keeps the author outside the quoted words, so the card is a figure holding a blockquote and its caption. */
-.prose figure.quote { --quote-mark: var(--muted); --quote-mark-fade: color-mix(in srgb, var(--quote-mark) 50%, transparent); position: relative; overflow: hidden; padding: var(--space-6); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--surface); line-height: var(--leading-dense); }
-.prose figure.quote.accent { --quote-mark: var(--accent); background: var(--accent-wash); }
+.prose figure.quote { --quote-mark: var(--accent); --quote-mark-fade: color-mix(in srgb, var(--quote-mark) 50%, transparent); position: relative; overflow: hidden; padding: var(--space-6); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--card-background); line-height: var(--leading-dense); }
+.prose figure.quote.accent { background: var(--accent-wash); }
 /* Inside the card the panel paints its own frame, so the quotation mark keeps only its meaning. */
 .prose figure.quote blockquote { padding: 0; border: 0; border-radius: 0; background: none; }
 .prose figure.quote blockquote > * + * { margin-top: var(--space-4); }
@@ -446,13 +452,13 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 .quote-role { display: block; margin-top: var(--space-1); color: var(--muted); font-size: var(--text-1); }
 .quote.accent .quote-role { color: var(--muted-on-tint); }
 /* A note card speaks the same language as a code block: a quiet surface, a hairline, a mark in the gutter. */
-.prose aside.note { display: grid; grid-template-columns: var(--space-5) 1fr; column-gap: var(--space-3); padding: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--surface); line-height: var(--leading-dense); }
+.prose aside.note { display: grid; grid-template-columns: var(--space-5) 1fr; column-gap: var(--space-3); padding: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--code-block); line-height: var(--leading-dense); }
 /* The round mark is decoration, so CSS draws it in the first grid column and the page text carries no empty node for it. */
 .prose aside.note::before { content: ""; align-self: start; justify-self: start; width: var(--space-5); height: var(--space-5); margin-top: var(--space-1); background-color: var(--accent); mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5.4'/%3E%3Cpath d='M12 7.4h.01'/%3E%3C/svg%3E") center / contain no-repeat; }
 .note-body { min-width: 0; }
 .note-body > * + * { margin-top: var(--space-4); }
-.prose pre { max-width: 100%; overflow-x: auto; padding: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--surface); font-size: var(--text-2); }
-.prose :not(pre) > code { background: var(--elevated); padding: var(--line-thin) var(--space-1); border-radius: var(--radius-sm); font-size: var(--inline-code-scale); }
+.prose pre { max-width: 100%; overflow-x: auto; padding: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--code-block); font-size: var(--text-2); }
+.prose :not(pre) > code { background: var(--code-mark); padding: var(--line-thin) var(--space-1); border-radius: var(--radius-sm); font-size: var(--inline-code-scale); }
 .prose table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; }
 .prose th, .prose td { padding: var(--space-3) var(--space-4); border: var(--line-thin) solid var(--border); text-align: left; }
 .prose figure img, .prose img { max-width: 100%; height: auto; border-radius: var(--radius-md); }
@@ -460,13 +466,15 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 /* Only a picture's caption is small print under it: a quote card writes its speaker the other way. */
 .prose figure > img + figcaption { text-align: center; color: var(--muted); font-size: var(--text-2); line-height: var(--leading-caption); margin-top: var(--space-3); }
 .publication-back { margin-top: var(--space-7); border-top: var(--line-thin) solid var(--border); padding-top: var(--space-5); width: 100%; }
-.article-share { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-6); }
+.article-share { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-6); }
 .article-share-label { color: var(--muted); font-size: var(--text-2); }
 .article-share-actions { display: flex; align-items: center; }
 .article-share [hidden] { display: none; }
-.article-share-control { position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--tap); height: var(--tap); padding: 0; border: 0; border-radius: var(--radius-md); background: transparent; color: var(--muted); }
+/* The glyph, not a 44 px padding box, decides the hit area (owner, 24.10.2026): a 32 px square around a 24 px icon
+   still clears WCAG 2.5.8, and the row reads as one line with its label. */
+.article-share-control { position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--share-control-size); height: var(--share-control-size); padding: 0; border: 0; border-radius: var(--radius-md); background: transparent; color: var(--muted); }
 .article-share-control > span:not(.article-share-tooltip):not([hidden]) { display: inline-flex; }
-.article-share-control .icon { width: var(--text-4); height: var(--text-4); }
+.article-share-control .icon { width: var(--icon-large); height: var(--icon-large); }
 .article-share-control:focus-visible { color: var(--accent); }
 @media (hover: hover) and (pointer: fine) { .article-share-control:hover { color: var(--accent); } }
 .article-share-tooltip { display: none; position: absolute; bottom: calc(100% + var(--space-1)); right: 0; width: max-content; padding: var(--space-1) var(--space-2); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--foreground); font-size: var(--text-1); line-height: var(--leading-caption); white-space: normal; box-shadow: var(--shadow-feedback); max-width: min(var(--tip-measure), calc(100vw - var(--gutter) * 2)); pointer-events: none; }
