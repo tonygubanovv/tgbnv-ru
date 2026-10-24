@@ -1,7 +1,7 @@
 ---
-interface Props { name?: 'sun' | 'moon' | 'arrow' | 'folder' | 'article' | 'tag' | 'copy' | 'check' | 'link' | 'telegram' | 'vk' | 'star' | 'menu' | 'close' | 'mail' | 'telegram-plane'; direction?: 'right' | 'left' | 'down'; size?: 14 | 16 | 18 | 20 | 28; class?: string }
+interface Props { name?: 'sun' | 'moon' | 'arrow' | 'folder' | 'article' | 'tag' | 'copy' | 'check' | 'link' | 'telegram' | 'vk' | 'star' | 'menu' | 'close' | 'mail' | 'telegram-plane'; direction?: 'right' | 'left' | 'down'; size?: 14 | 16 | 18 | 20 | 24 | 28; class?: string }
 const { name = 'arrow', direction = 'right', size = 20, class: className } = Astro.props;
-const sizes = { 14: '--icon-small', 16: '--icon-compact', 18: '--text-4', 20: '--icon-default', 28: '--icon-social' } as const;
+const sizes = { 14: '--icon-small', 16: '--icon-compact', 18: '--text-4', 20: '--icon-default', 24: '--icon-large', 28: '--icon-social' } as const;
 ---
 <svg class:list={['icon', className, { [`icon-${direction}`]: name === 'arrow' }]} style={`--icon-size:var(${sizes[size]})`} width={size} height={size} viewBox={name === 'telegram' ? '0 0 50 50' : name === 'telegram-plane' ? '0 0 28 28' : '0 0 24 24'} fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap={name === 'sun' || name === 'moon' ? 'butt' : 'round'} stroke-linejoin={name === 'sun' || name === 'moon' ? 'miter' : 'round'} aria-hidden="true" focusable="false">
   {name === 'sun' && <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></>}

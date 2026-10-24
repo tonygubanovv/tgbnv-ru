@@ -162,6 +162,8 @@
   /* Component parameters only where the role differs from a shared semantic value. */
   --header-height: var(--space-9);
   --header-h: calc(var(--header-height) + var(--line-thin));
+  --nav-measure: 360px;
+  --nav-icon-size: 28px;
   --button-height: var(--space-7);
   --card-padding: var(--space-5);
   --card-title-size: var(--text-5);
@@ -176,6 +178,7 @@
   --icon-small: var(--text-2);
   --icon-compact: var(--text-3);
   --icon-default: 20px;
+  --icon-large: 24px;
   --icon-social: 28px;
   --portrait-size: 112px;
   --hero-measure: 520px;
@@ -253,12 +256,8 @@ svg { flex-shrink: 0; }
 .site-header.is-hidden { transform: translateY(-100%); }
 .site-header:focus-within { transform: none; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-height); gap: var(--space-6); }
-.header-actions { display: flex; align-items: center; gap: var(--space-6); margin-left: auto; }
 .brand { display: inline-flex; align-items: center; gap: var(--space-3); font-size: var(--brand-size); font-weight: var(--weight-brand); letter-spacing: var(--tracking-brand); white-space: nowrap; }
 .brand-dot { color: var(--brand); }
-.desktop-nav { display: flex; gap: var(--space-6); align-items: center; font-size: var(--text-2); line-height: var(--leading-label); font-weight: var(--weight-medium); }
-.header-controls { display: none; align-items: center; }
-.mobile-nav { display: none; }
 .theme-toggle { display: grid; place-items: center; width: var(--tap); height: var(--tap); background: transparent; border: 0; border-radius: var(--radius-pill); color: var(--muted); transition: color var(--duration-state), background-color var(--duration-state); }
 @media (hover: hover) and (pointer: fine) { .theme-toggle:hover { background: var(--hover-fill); color: var(--accent); } }
 .footer-tools { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-4); }
@@ -307,8 +306,9 @@ svg { flex-shrink: 0; }
 /* Tags are quiet labels; only the ones that lead somewhere are clickable and taller. */
 .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5); }
 .tag { display: inline-flex; align-items: center; padding: var(--line-thin) var(--space-2); min-height: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); font-size: var(--text-1); color: var(--muted); line-height: var(--leading-label); }
-a.tag { min-height: var(--space-6); }
-@media (hover: hover) and (pointer: fine) { a.tag:hover { color: var(--accent); border-color: var(--accent); } }
+button.tag { min-height: var(--space-6); background: transparent; transition: color var(--duration-state), border-color var(--duration-state); }
+@media (hover: hover) and (pointer: fine) { button.tag:hover { color: var(--accent); border-color: var(--accent); } }
+button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--selected); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); margin-bottom: var(--heading-gap); }
 .section-title { display: flex; gap: var(--space-4); align-items: baseline; min-width: 0; font-size: var(--display-1); }
 .section-heading h2 { font-size: inherit; }
@@ -476,10 +476,7 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 @media (max-width: 1000px) {
   :root { --gutter: var(--space-6); }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .desktop-nav { display: none; }
   .header-inner { justify-content: space-between; }
-  .header-controls { display: flex; }
-  .mobile-nav { display: block; }
   .hero { padding-top: var(--space-8); grid-template-columns: 1.6fr 1fr; }
   .hero-art { margin-right: calc(var(--space-4) * -1); }
   .hero-actions .button { gap: var(--space-3); padding-inline: var(--space-4); }
@@ -567,19 +564,15 @@ body:has(.cookie-notice:not([hidden])) { padding-bottom: calc(var(--cookie-notic
 .legal-documents h2 { font-size: var(--text-6); }
 .legal-documents p { margin-top: var(--space-2); color: var(--foreground); font-size: var(--text-3); }
 
-/* Header contacts share the site's quiet controls and remain usable without JS. */
-.header-contacts { display: flex; align-items: center; gap: var(--space-6); }
+/* Contacts live inside the menu panel: the address stays a plain mailto link plus the copy control. */
 .email-contact { min-width: 0; }
 .email-contact-row { display: flex; align-items: center; gap: var(--space-1); min-height: var(--copy-email-size); }
 .email-contact-row > a { display: block; font-size: var(--text-2); font-weight: var(--weight-medium); line-height: var(--icon-default); overflow-wrap: anywhere; }
 .copy-email { display: grid; place-items: center; flex: 0 0 var(--copy-email-size); width: var(--copy-email-size); height: var(--copy-email-size); min-height: 0; padding: 0; border: 0; background: transparent; color: var(--muted); transition: color var(--duration-state); }
 .copy-email:focus-visible, .copy-email[data-copy-state="success"] { color: var(--accent); }
 @media (hover: hover) and (pointer: fine) { .copy-email:hover { color: var(--accent); } }
-.telegram-contact { display: grid; place-items: center; width: var(--space-7); height: var(--space-7); border-radius: 50%; color: var(--muted); }
-@media (hover: hover) and (pointer: fine) { .telegram-contact:hover { color: var(--accent); } }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .contact-links .button { gap: var(--space-3); min-width: 0; padding-block: var(--space-4); font-size: var(--text-3); overflow-wrap: anywhere; }
-@media (max-width: 1000px) { .header-contacts { display: none; } }
 
 /* Email is always a plain mailto link, including hover, never a button. */
 a[href^="mailto:"] { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
@@ -601,13 +594,13 @@ a[href^="mailto:"] { padding: 0; border: 0; border-radius: 0; background: transp
 :is(.copy-email, .heading-anchor, .article-share-control):active { color: var(--link); }
 :is(.theme-toggle, .article-share-control):active { background: var(--pressed-fill); }
 :is(button, .button):disabled { color: var(--disabled-ink); background: var(--disabled-fill); border-color: var(--border); box-shadow: none; cursor: not-allowed; opacity: var(--opacity-disabled); }
-a[aria-current="page"], .tag[aria-current] { color: var(--selected); }
+a[aria-current="page"] { color: var(--selected); }
 /* No positioning script: a viewport-aligned note avoids overflow without moving its sentence.
    An attribute also covers sandboxed frames where the scripting media feature is unreliable. */
 .tip:not([data-tip-ready]) > .tip-bubble { position: fixed; inset: auto var(--gutter) var(--space-5); width: auto; max-width: var(--tip-measure); margin-inline: auto; transform: none; }
 @media (forced-colors: active) {
   :focus-visible { outline-color: Highlight; }
-  .button, .mobile-nav summary, .content-card, .tip-bubble { border-color: CanvasText; }
+  .button, .content-card, .tip-bubble { border-color: CanvasText; }
   .button.primary { background: ButtonFace; color: ButtonText; }
   .brand-dot, .toc a.is-active, .tip-term { color: LinkText; }
   .breadcrumbs-inner { mask-image: none; overflow-x: auto; }

@@ -133,6 +133,16 @@ for (const [from, to] of Object.entries(movedPaths)) {
   if (!await exists(`${to}index.html`)) errors.push(`Redirect destination does not exist: /${from} -> /${to}`);
 }
 
+// Topics are filters on the blog page instead of pages of their own, so the chips and the cards have to agree.
+{
+  const attr = (node, name) => node.attrs.find(entry => entry.name === name)?.value;
+  const blogPage = elements(parse(await readFile(new URL('blog/index.html', dist), 'utf8')));
+  const chips = new Set(blogPage.filter(node => node.tagName === 'button' && attr(node, 'data-topic') !== undefined).map(node => attr(node, 'data-topic')));
+  const cardTopics = blogPage.filter(node => node.tagName === 'article').flatMap(node => (attr(node, 'data-topics') ?? '').split(' ').filter(Boolean));
+  for (const topic of chips) if (!cardTopics.includes(topic)) errors.push(`Topic filter chip has no article on /blog/: ${topic}`);
+  for (const topic of cardTopics) if (!chips.has(topic)) errors.push(`Article topic has no filter chip on /blog/: ${topic}`);
+}
+
 const indexedTitles = new Map();
 const indexedDescriptions = new Map();
 for (const page of await walk(dist)) {
@@ -223,7 +233,7 @@ for (const page of await walk(dist)) {
   if ((html.match(/<h1\b/gi) ?? []).length !== 1) errors.push(`Expected exactly one H1: ${path}`);
   if (!nodes.some(node => node.tagName === 'html' && node.attrs.some(attr => attr.name === 'lang' && attr.value === site.locale.language))) errors.push(`Missing Russian regional page language: ${path}`);
   if (!nodes.some(node => node.tagName === 'meta' && node.attrs.some(attr => attr.name === 'property' && attr.value === 'og:locale') && node.attrs.some(attr => attr.name === 'content' && attr.value === site.locale.openGraph))) errors.push(`Missing Russian Open Graph locale: ${path}`);
-  for (const nav of nodes.filter(node => node.tagName === 'nav' && node.attrs.some(attr => attr.name === 'aria-label' && ['Основная навигация', 'Мобильная навигация'].includes(attr.value)))) {
+  for (const nav of nodes.filter(node => node.tagName === 'nav' && node.attrs.some(attr => attr.name === 'aria-label' && attr.value === 'Основная навигация'))) {
     const menuLinks = elements(nav).filter(node => node.tagName === 'a').map(node => node.attrs.find(attr => attr.name === 'href')?.value);
     for (const item of mainMenu) if (!menuLinks.includes(`${expectedBase}${item.path}`)) errors.push(`Missing static navigation link: ${path} -> ${item.path}`);
     if (menuLinks.some(href => href?.startsWith(`${expectedBase}blog/tags/`))) errors.push(`Blog topics must stay out of the header menu: ${path}`);

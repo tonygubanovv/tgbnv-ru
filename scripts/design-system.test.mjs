@@ -28,7 +28,7 @@ test('responsive breakpoints and image sizes remain aligned', async () => {
   const card = await read('src/components/ContentCard.astro');
   for (const width of [700, 1000]) assert.match(css, new RegExp(`max-width: ${width}px`));
   assert.match(css, /min-width: 1200px/);
-  assert.match(header, /matchMedia\('\(max-width: 1000px\)'\)/);
+  assert.match(header, /@media \(min-width: 1001px\)/);
   assert.match(card, /min-width: 1001px/);
   assert.match(card, /min-width: 701px/);
   assert.doesNotMatch(css, /@media[^{}]*var\(/);

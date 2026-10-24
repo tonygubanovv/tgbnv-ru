@@ -10,28 +10,17 @@ import MenuLinks from './MenuLinks.astro';
     <a class="brand" href={url()} aria-label={`${site.name} — главная`}>
       <span>{site.name}<span class="brand-dot">.</span></span>
     </a>
-    <div class="header-actions">
-    <nav class="desktop-nav" aria-label="Основная навигация">
-      <MenuLinks items={mainMenu} compact />
-    </nav>
-    <div class="header-contacts">
-      <EmailContact tooltipId="header-email-tooltip" />
-      {links.telegram && <a class="telegram-contact" href={links.telegram} aria-label="Telegram Антона Губанова"><Icon name="telegram" size={28} /></a>}
-    </div>
-    <div class="header-controls">
-      <details class="mobile-nav">
-        <summary aria-label="Меню сайта"><span class="menu-open-icon"><Icon name="menu" /></span><span class="menu-close-icon"><Icon name="close" /></span></summary>
-        <nav class="mobile-menu-panel" aria-label="Мобильная навигация">
-          <MenuLinks items={mainMenu} />
-          <div class="mobile-menu-contacts">
-            <p class="menu-label">Связаться</p>
-            {links.email && <div class="menu-contact-row"><Icon name="mail" size={20} /><a href={`mailto:${links.email}`}>{links.email}</a></div>}
-            {links.telegram && <div class="menu-contact-row"><Icon name="telegram-plane" size={28} /><a href={links.telegram} target="_blank" rel="noopener noreferrer">Telegram</a></div>}
-          </div>
-        </nav>
-      </details>
-    </div>
-    </div>
+    <details class="mobile-nav">
+      <summary aria-label="Меню сайта"><span class="menu-open-icon"><Icon name="menu" size={24} /></span><span class="menu-close-icon"><Icon name="close" size={24} /></span></summary>
+      <nav class="mobile-menu-panel" aria-label="Основная навигация">
+        <MenuLinks items={mainMenu} />
+        <div class="mobile-menu-contacts">
+          <p class="menu-label">Связаться</p>
+          {links.email && <div class="menu-contact-row"><Icon name="mail" size={20} /><EmailContact tooltipId="menu-email-tooltip" /></div>}
+          {links.telegram && <div class="menu-contact-row"><Icon name="telegram-plane" size={28} /><a href={links.telegram} target="_blank" rel="noopener noreferrer">Telegram</a></div>}
+        </div>
+      </nav>
+    </details>
   </div>
 </header>
 <script>
@@ -49,7 +38,6 @@ import MenuLinks from './MenuLinks.astro';
   menu?.addEventListener('focusout', event => {
     if (event.relatedTarget instanceof Node && !menu.contains(event.relatedTarget)) menu.open = false;
   });
-  window.matchMedia('(max-width: 1000px)').addEventListener('change', () => { if (menu) menu.open = false; });
   const header = document.querySelector<HTMLElement>('.site-header');
   let lastY = window.scrollY;
   const hideDistance = 120;
@@ -102,17 +90,18 @@ import MenuLinks from './MenuLinks.astro';
 
 <style>
   .mobile-nav { position: static; }
-  .mobile-nav summary { display: grid; place-items: center; width: var(--tap); height: var(--tap); list-style: none; border: var(--line-thin) solid var(--border-interactive); border-radius: var(--radius-md); color: var(--foreground); }
+  .mobile-nav summary { display: grid; place-items: center; width: var(--tap); height: var(--tap); list-style: none; background: transparent; border: 0; color: var(--foreground); transition: color var(--duration-state); }
   .mobile-nav summary::-webkit-details-marker { display: none; }
-  .mobile-nav[open] summary, .mobile-nav summary:active { color: var(--accent); background: var(--card-background); }
+  .mobile-nav[open] summary, .mobile-nav summary:active { color: var(--accent); }
   @media (hover: hover) and (pointer: fine) {
-    .mobile-nav summary:hover { color: var(--accent); background: var(--card-background); }
+    .mobile-nav summary:hover { color: var(--accent); }
   }
   .menu-open-icon, .menu-close-icon { display: flex; }
+  .menu-open-icon :global(.icon), .menu-close-icon :global(.icon) { stroke-width: 2; }
   .menu-close-icon, .mobile-nav[open] .menu-open-icon { display: none; }
   .mobile-nav[open] .menu-close-icon { display: flex; }
   .mobile-nav::details-content { transition: content-visibility var(--duration-panel) allow-discrete; }
-  .mobile-menu-panel { position: absolute; top: 100%; inset-inline: 0; max-height: calc(100dvh - var(--header-h)); overflow-y: auto; overscroll-behavior: contain; padding: var(--space-3) var(--gutter) var(--space-5); background: var(--background); border-bottom: var(--line-thin) solid var(--border); box-shadow: var(--shadow-panel); }
+  .mobile-menu-panel { --menu-gap: 0px; position: absolute; top: calc(100% + var(--menu-gap)); inset-inline: 0; max-height: calc(100dvh - var(--header-h) - var(--menu-gap)); overflow-y: auto; overscroll-behavior: contain; padding: var(--space-3) var(--gutter) var(--space-5); background: var(--background); border-bottom: var(--line-thin) solid var(--border); box-shadow: var(--shadow-panel); }
   @supports selector(details::details-content) {
     .mobile-menu-panel { opacity: 0; transform: translateY(calc(-1 * var(--space-2))); transition: opacity var(--duration-panel) var(--ease-panel), transform var(--duration-panel) var(--ease-panel); }
     .mobile-nav[open] .mobile-menu-panel { opacity: 1; transform: translateY(0); }
@@ -121,14 +110,21 @@ import MenuLinks from './MenuLinks.astro';
   @media (prefers-reduced-motion: reduce) {
     .mobile-nav::details-content, .mobile-menu-panel { transition: none; }
   }
-  :global(body:has(.cookie-notice:not([hidden]))) .mobile-menu-panel { max-height: calc(100dvh - var(--header-h) - var(--cookie-notice-height, var(--space-7)) - env(safe-area-inset-bottom)); }
+  :global(body:has(.cookie-notice:not([hidden]))) .mobile-menu-panel { max-height: calc(100dvh - var(--header-h) - var(--menu-gap) - var(--cookie-notice-height, var(--space-7)) - env(safe-area-inset-bottom)); }
   .mobile-menu-contacts { display: grid; gap: var(--space-2); border-top: var(--line-thin) solid var(--border); padding-top: var(--space-4); margin-top: var(--space-3); }
   .menu-label { color: var(--muted); font-size: var(--text-1); }
   .menu-contact-row { display: grid; grid-template-columns: var(--space-5) minmax(0, 1fr); align-items: center; gap: var(--space-2); padding-inline: var(--space-3); border-inline: var(--line-thin) solid transparent; }
   .menu-contact-row > :global(.icon) { justify-self: center; color: var(--muted); }
-  .menu-contact-row > a { display: flex; align-items: center; min-height: var(--tap); font-size: var(--text-2); font-weight: var(--weight-medium); overflow-wrap: anywhere; color: var(--foreground); }
-  .menu-contact-row > a:focus-visible, .menu-contact-row > a:active { color: var(--accent); }
+  .menu-contact-row :global(a) { display: flex; align-items: center; min-height: var(--tap); font-size: var(--text-2); font-weight: var(--weight-medium); overflow-wrap: anywhere; color: var(--foreground); }
+  .menu-contact-row :global(a):focus-visible, .menu-contact-row :global(a):active { color: var(--accent); }
   @media (hover: hover) and (pointer: fine) {
-    .menu-contact-row > a:hover { color: var(--accent); }
+    .menu-contact-row :global(a):hover { color: var(--accent); }
+  }
+  @media (min-width: 1001px) {
+    /* Desktop gets a compact card under the burger instead of the full-width sheet: its own border,
+       radius and a gap keep it visibly separate from the header. The glyph grows with the header
+       instead of gaining a box. */
+    .mobile-menu-panel { --menu-gap: var(--space-2); inset-inline: auto; right: max(var(--gutter), calc((100% - var(--page-max)) / 2)); width: var(--nav-measure); padding: var(--space-4); border: var(--line-thin) solid var(--border); border-radius: var(--radius-lg); }
+    .menu-open-icon :global(.icon), .menu-close-icon :global(.icon) { width: var(--nav-icon-size); height: var(--nav-icon-size); }
   }
 </style>

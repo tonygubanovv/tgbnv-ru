@@ -4,13 +4,25 @@ import ContentCard from '../../components/ContentCard.astro';
 import EmptyState from '../../components/EmptyState.astro';
 import { blogTags } from '../../config/site';
 import { blogEntries } from '../../utils/content';
-import { url, tagSlug } from '../../utils/urls';
+import { tagSlug } from '../../utils/urls';
 const posts = await blogEntries();
 const tags = blogTags.filter(tag => posts.some(post => post.data.tags.includes(tag)));
 ---
 <BaseLayout path="blog/">
   <div class="container page-content"><div class="page-heading"><h1>Блог<span class="brand-dot">.</span></h1><p>Разбираю инструменты и проверяю гипотезы. Рассказываю, как устроен эксперимент и что получилось в результате.</p></div>
-    {tags.length > 0 && <nav class="tags tag-filter" aria-label="Темы блога">{tags.map(tag => <a class="tag" href={url(`blog/tags/${tagSlug(tag)}/`)}>{tag}</a>)}</nav>}
-    {posts.length ? <div class="card-grid">{posts.map(entry => <ContentCard entry={entry} />)}</div> : <EmptyState kind="blog" />}
+    {tags.length > 0 && <nav class="tags tag-filter" aria-label="Фильтр статей по теме">{tags.map(tag => <button type="button" class="tag" data-topic={tagSlug(tag)} aria-pressed="false">{tag}</button>)}</nav>}
+    {posts.length ? <div class="card-grid">{posts.map(entry => <ContentCard entry={entry} topics={entry.data.tags.map(tagSlug)} />)}</div> : <EmptyState kind="blog" />}
   </div>
 </BaseLayout>
+<script>
+  // Topics are labels, not pages: a chip only hides the cards it does not match, so nothing leaves /blog/.
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.tag-filter [data-topic]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.card-grid > .content-card')];
+  let active: string | null = null;
+  const show = (topic: string | null) => {
+    active = topic;
+    for (const chip of chips) chip.setAttribute('aria-pressed', String(chip.dataset.topic === topic));
+    for (const card of cards) card.hidden = topic !== null && !(card.dataset.topics ?? '').split(' ').includes(topic);
+  };
+  for (const chip of chips) chip.addEventListener('click', () => show(chip.dataset.topic === active ? null : chip.dataset.topic ?? null));
+</script>

@@ -31,8 +31,13 @@ export const movedPaths: Record<string, string> = {
   'consent/': 'legal/consent/',
   'telegram-ads-ib-vendor/': 'blog/telegram-ads-ib-vendor/',
   'salesbot-utm-amocrm/': 'blog/salesbot-utm-amocrm/',
-  'blog/tags/54656c656772616d20416473/': 'blog/tags/telegram-ads/',
-  'blog/tags/d09dd0b5d0b9d180d0bed181d0b5d182d0b8/': 'blog/tags/neuroseti/',
-  'blog/tags/53454f20262047454f/': 'blog/tags/seo-geo/',
-  'blog/tags/d09ad0b5d0b9d181d18b/': 'blog/tags/cases/',
+  // Topic pages were dropped on 24.10.2026: topics filter /blog/ in place, so every old topic address lands on the blog.
+  'blog/tags/54656c656772616d20416473/': 'blog/',
+  'blog/tags/d09dd0b5d0b9d180d0bed181d0b5d182d0b8/': 'blog/',
+  'blog/tags/53454f20262047454f/': 'blog/',
+  'blog/tags/d09ad0b5d0b9d181d18b/': 'blog/',
+  'blog/tags/telegram-ads/': 'blog/',
+  'blog/tags/neuroseti/': 'blog/',
+  'blog/tags/seo-geo/': 'blog/',
+  'blog/tags/cases/': 'blog/',
 };
