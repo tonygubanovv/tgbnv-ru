@@ -186,7 +186,7 @@
   --related-card-measure: 320px;
   --footer-column-measure: 192px;
   --meta-icon-gap: 6px;
-  --meta-icon-shift: .5px;
+  --meta-icon-shift: -1px;
   --cookie-control-height: var(--space-6);
   --feedback-measure: calc(var(--tip-measure) - var(--space-9));
   --icon-small: var(--text-2);
@@ -381,8 +381,11 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 /* One quiet technical line above a title: a date, a category, an edition. Used by cards, articles and documents. */
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-4); color: var(--muted); font-size: var(--text-1); }
 /* Reading time and the date are one unit each of that row: a glyph and its text in the row's own colour. The glyph keeps 1.75 px of
-   its box empty on the right, so the visible gap was 5.75 px (owner, 24.10.2026: «чуть больше отступ от иконки до текста»). The
-   half-pixel drop centres the ink: the 14 px box sits in the 18 px line box, digits span 177..186, the icon ink came out 0.5 px high. */
+   its box empty on the right, so `--meta-icon-gap` 6 px reads as 7.75 px (owner, 24.10.2026: «чуть больше отступ от иконки до текста»).
+   The lift is measured on painted ink at 12 px and DPR 1, not on the boxes: the digits paint nine rows above the baseline, the calendar
+   paints twelve and its base stroke sat one row under the text, which reads as a glyph hanging below the line (owner, 24.10.2026:
+   «ни фига не по центру… ровняй ровненько»). One whole pixel puts that stroke on the baseline and brings the two ink centres together
+   to 0.1 px; a fraction would also smear the 1.6 px stroke across two rows. */
 .meta-item { display: inline-flex; align-items: center; gap: var(--meta-icon-gap); }
 .meta-item .icon { transform: translateY(var(--meta-icon-shift)); }
 .content-card :is(h2, h3) { margin-top: var(--space-3); font-size: var(--card-title-size); line-height: var(--leading-card); overflow-wrap: anywhere; }

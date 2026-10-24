@@ -76,6 +76,14 @@ test('text, syntax, feedback and necessary control borders meet their contrast r
   }
 });
 
+test('the meta row glyph is lifted onto the ink of the digits it stands beside', () => {
+  // The calendar paints twelve rows against nine for the digits, so flex centring alone leaves its base stroke under the text
+  // baseline. One whole pixel is the step that puts that stroke on the baseline; a fraction would smear the 1.6 px stroke.
+  const shift = Number(css.match(/--meta-icon-shift:\s*(-?[\d.]+)px/)[1]);
+  assert.ok(shift < 0 && shift >= -1, `Meta glyph must be lifted by at most one pixel, got ${shift}px`);
+  assert.match(css, /\.meta-item \.icon \{ transform: translateY\(var\(--meta-icon-shift\)\); \}/);
+});
+
 test('inline notes expose a keyboard disclosure and preserve links on Escape', () => {
   const page = parse('<html><body><div class="prose"><p>Термин{{<a href="https://example.com">Источник</a>}}</p></div></body></html>');
   applyBlocks(page);
