@@ -74,11 +74,12 @@ const jsonLd = {
         let active = heads[heads.length - 1];
         if (!atBottom) {
           active = heads[0];
+          // The line is the browser's own anchor landing offset, so a heading is current exactly where a click on it puts it:
+          // measuring the live header instead left the clicked item unmarked, because the header hides while the page scrolls
+          // down to it (owner, 24.10.2026). The extra pixel covers the rounding of the landing position.
+          const edge = (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0) + 1;
           for (const heading of heads) {
-            const header = document.querySelector('.site-header');
-            const visible = header && (!header.classList.contains('is-hidden') || header.matches(':focus-within'));
-            const offset = (visible ? header.getBoundingClientRect().height : 0) + parseFloat(getComputedStyle(nav).getPropertyValue('--toc-gap'));
-            if (heading.getBoundingClientRect().top > offset) break;
+            if (heading.getBoundingClientRect().top > edge) break;
             active = heading;
           }
         }

@@ -128,7 +128,11 @@
   --accent-ink: light-dark(var(--color-white), var(--color-on-lime));
   --brand: var(--accent);
   --link: var(--accent);
-  --link-hover: var(--foreground);
+  /* Both states darken the link instead of brightening it, so in the dark theme a hovered or visited link recodes to a deeper
+     green rather than to snow. Visited keeps a shade of its own, quieter than the plain link, so a reopened article shows what
+     was already read (owner, 24.10.2026). */
+  --link-visited: color-mix(in srgb, var(--link) 88%, var(--color-black));
+  --link-hover: color-mix(in srgb, var(--link) 76%, var(--color-black));
   --selected: var(--accent);
   --focus: var(--accent);
   --success: var(--accent);
@@ -181,6 +185,8 @@
   --share-control-size: var(--space-6);
   --related-card-measure: 320px;
   --footer-column-measure: 192px;
+  --meta-icon-gap: 6px;
+  --meta-icon-shift: .5px;
   --cookie-control-height: var(--space-6);
   --feedback-measure: calc(var(--tip-measure) - var(--space-9));
   --icon-small: var(--text-2);
@@ -374,8 +380,11 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 .card-body { padding: var(--card-padding); }
 /* One quiet technical line above a title: a date, a category, an edition. Used by cards, articles and documents. */
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-4); color: var(--muted); font-size: var(--text-1); }
-/* Reading time is one unit of that row: the clock rides on the text line, space-1 from the number, in the row's own colour. */
-.meta-item { display: inline-flex; align-items: center; gap: var(--space-1); }
+/* Reading time and the date are one unit each of that row: a glyph and its text in the row's own colour. The glyph keeps 1.75 px of
+   its box empty on the right, so the visible gap was 5.75 px (owner, 24.10.2026: «чуть больше отступ от иконки до текста»). The
+   half-pixel drop centres the ink: the 14 px box sits in the 18 px line box, digits span 177..186, the icon ink came out 0.5 px high. */
+.meta-item { display: inline-flex; align-items: center; gap: var(--meta-icon-gap); }
+.meta-item .icon { transform: translateY(var(--meta-icon-shift)); }
 .content-card :is(h2, h3) { margin-top: var(--space-3); font-size: var(--card-title-size); line-height: var(--leading-card); overflow-wrap: anywhere; }
 .card-body > p { margin-top: var(--space-3); color: var(--foreground); font-size: var(--text-2); line-height: var(--leading-dense); }
 .not-found { padding-block: var(--space-8) var(--space-9); text-align: center; }
@@ -426,6 +435,7 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 /* The copy anchor is a pointer affordance: touch screens and phones do not get it at all (owner, 22.10.2026). */
 @media (hover: none), (max-width: 700px) { .heading-anchor { display: none; } }
 .prose a { color: var(--link); text-decoration: underline; text-underline-offset: var(--space-1); }
+.prose a:visited { color: var(--link-visited); }
 @media (hover: hover) and (pointer: fine) { .prose a:hover { color: var(--link-hover); } }
 /* A hidden note the owner marks with {{ ... }} after a word: the word keeps its place in the line,
    the card is a quiet surface panel above it, and nothing about it moves the text.

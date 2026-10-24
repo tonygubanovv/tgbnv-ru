@@ -53,6 +53,10 @@ test('text, syntax, feedback and necessary control borders meet their contrast r
   const luminance = rgb => rgb.map(n => n / 255).map(n => n <= .04045 ? n / 12.92 : ((n + .055) / 1.055) ** 2.4).reduce((sum,n,i) => sum + n * [.2126,.7152,.0722][i],0);
   const contrast = (a,b) => { const [high,low] = [luminance(a),luminance(b)].sort((x,y) => y-x); return (high+.05)/(low+.05); };
   const mix = (a,b,part) => a.map((n,i) => n*part+b[i]*(1-part));
+  // A prose link dims toward black in both themes, and the hover rule has to win over the visited one (owner, 24.10.2026).
+  const shades = [...css.matchAll(/--link-(\w+):\s*color-mix\(in srgb, var\(--link\) (\d+)%, var\(--color-black\)\)/g)].map(m => [m[1], Number(m[2]) / 100]);
+  assert.deepEqual(shades.map(([name]) => name), ['visited', 'hover'], 'Link states must darken the accent, not brighten it');
+  assert.ok(css.indexOf('.prose a:visited') < css.indexOf('.prose a:hover'), 'Visited colour must not outrank the hover it darkens');
   for (const theme of [
     { bg:'paper', surfaces:['white','mist'], ink:'ink', muted:'olive', accent:'green', on:'white', syntax:['purple','blue','brown','red'] },
     { bg:'night', surfaces:['forest','moss','neutral','graphite'], ink:'snow', muted:'gray', accent:'lime', on:'on-lime', syntax:['lilac','sky','sand','rose'] },
@@ -61,6 +65,7 @@ test('text, syntax, feedback and necessary control borders meet their contrast r
     for (const role of [theme.ink,theme.muted,theme.accent,...theme.syntax]) for (const surface of surfaces) {
       assert.ok(contrast(colors[role],surface)>=4.5, `${role} on ${surface}: ${contrast(colors[role],surface).toFixed(2)}`);
     }
+    for (const [,weight] of shades) assert.ok(contrast(mix(colors[theme.accent],colors.black,weight),colors[theme.bg])>=4.5, `Link ${weight} on ${theme.bg}`);
     const tinted = mix(colors[theme.accent],colors[theme.bg],.1);
     assert.ok(contrast(mix(colors[theme.muted],colors[theme.ink],.95),tinted)>=4.5, 'Quote attribution on accent tint');
     for (const weight of [1,.85,.75]) {
