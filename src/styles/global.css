@@ -179,6 +179,7 @@
   --toc-gap: var(--space-6);
   --copy-email-size: 22px; /* Owner exception: do not silently enlarge. */
   --share-control-size: var(--space-6);
+  --related-card-measure: 320px;
   --cookie-control-height: var(--space-6);
   --feedback-measure: calc(var(--tip-measure) - var(--space-9));
   --icon-small: var(--text-2);
@@ -337,8 +338,9 @@ button.tag[aria-pressed="true"] { color: var(--selected); border-color: var(--se
 .group-label { color: var(--muted); font-size: var(--text-1); }
 .footer-groups { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-4) var(--space-7); }
 .footer-group { display: grid; gap: var(--space-2); }
-.footer-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font-size: var(--text-2); }
-.footer-links a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--tap); }
+/* Both footer groups are vertical lists: one link per row, compact rows of 32 px (owner, 24.10.2026). */
+.footer-links { display: grid; gap: var(--space-1); font-size: var(--text-2); }
+.footer-links a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--space-6); }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-4); border-top: var(--line-thin) solid var(--border); font-size: var(--text-1); color: var(--muted); flex-wrap: wrap; }
 .page-content { padding-block: var(--space-5) var(--space-9); min-height: var(--listing-min-height); }
 .redirect-page h1 { font-size: var(--display-2); margin-bottom: var(--heading-gap); }
@@ -465,7 +467,6 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 /* A picture and its caption are one object, and the caption is small print under it, not a second body paragraph. */
 /* Only a picture's caption is small print under it: a quote card writes its speaker the other way. */
 .prose figure > img + figcaption { text-align: center; color: var(--muted); font-size: var(--text-2); line-height: var(--leading-caption); margin-top: var(--space-3); }
-.publication-back { margin-top: var(--space-7); border-top: var(--line-thin) solid var(--border); padding-top: var(--space-5); width: 100%; }
 .article-share { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-6); }
 .article-share-label { color: var(--muted); font-size: var(--text-2); }
 .article-share-actions { display: flex; align-items: center; }
@@ -481,8 +482,11 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 .article-share-control:focus-visible .article-share-tooltip, .article-share-control[data-copy-state="feedback"] .article-share-tooltip { display: block; }
 @media (hover: hover) and (pointer: fine) { .article-share-control:hover .article-share-tooltip { display: block; } }
 .article-share[data-tooltip-dismissed] .article-share-tooltip { display: none; }
-.related { margin-top: var(--space-8); }
+/* The recommendations keep the article column: the same measure and the same edges as the body text (owner, 24.10.2026). */
+.related { max-width: var(--measure); margin: var(--space-8) auto 0; }
 .related > h2 { font-size: var(--text-6); margin-bottom: var(--space-5); }
+/* One row of two cards, and the next row appears by itself as soon as the list grows: a card never falls below the measure. */
+.related .card-grid { grid-template-columns: repeat(auto-fit, minmax(var(--related-card-measure), 1fr)); }
 @media (max-width: 1000px) {
   :root { --gutter: var(--space-6); }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -80,9 +80,10 @@ export const links = {
   email: 'tonygubanovv@yandex.ru' as string | undefined,
   privacyEmail: 'tonygubanovv@yandex.ru',
 };
+/** Owner, 24.10.2026: email first, Telegram second — the order every list of contacts follows. */
 export const contactLinks = () => [
-  ...(links.telegram ? [{ key: 'telegram', label: 'Telegram', url: links.telegram }] : []),
   ...(links.email ? [{ key: 'email', label: links.email, url: `mailto:${links.email}` }] : []),
+  ...(links.telegram ? [{ key: 'telegram', label: 'Telegram', url: links.telegram }] : []),
 ];
 
 export const site = {

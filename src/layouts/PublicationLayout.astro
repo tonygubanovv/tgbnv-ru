@@ -43,10 +43,9 @@ const jsonLd = {
       <div class="prose" data-preserve-text={preserveText ? 'true' : undefined}><Content /></div>
       <HeadingAnchors />
       <ArticleShare path={path} title={data.title} />
-      <a class="text-link publication-back" href={url('blog/')}>Назад в блог</a>
     </article>
     </div>
-    {related.length > 0 && <section class="related"><h2>По соседству</h2><div class="card-grid">{related.map(entry => <ContentCard entry={entry} heading="h3" />)}</div></section>}
+    {related.length > 0 && <section class="related"><h2>Читайте также</h2><div class="card-grid">{related.map(entry => <ContentCard entry={entry} heading="h3" />)}</div></section>}
   </div>
   {toc.length > 0 && <script is:inline>
     (() => {

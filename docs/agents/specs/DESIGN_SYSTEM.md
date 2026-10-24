@@ -76,7 +76,8 @@ Cloudflare — ориентир ясности и системности, а н�
 | `--tip-measure` = 320 px | пояснение; ограничено viewport |
 | `--nav-measure` = 360 px, `--nav-icon-size` = 28 px | ширина панели меню и иконка бургера; с 1001 px |
 | `--tap` = 44 px | стандартный иконочный контрол |
-| `--share-control-size` = space-6 (32 px) | площадь нажатия share-иконок; равна высоте фильтра тем |
+| `--share-control-size` = space-6 (32 px) | площадь нажатия share-иконок; равна высоте фильтра тем и строке подвала |
+| `--related-card-measure` = 320 px | нижняя граница карточки в «Читайте также»; сетка `auto-fit` |
 | `--radius-sm/md/lg/pill` = 4/8/12/999 px | inline-code / малые панели / карточки / кнопки |
 | `--header-h` | теперь вычисляется из header-height + line-thin; 81/65 px |
 | собственный clamp 404 | `--display-error` = clamp(110px, 20vw, 220px) |
@@ -130,7 +131,7 @@ Cloudflare — ориентир ясности и системности, а н�
 | Header | sticky, default/hidden/focus-within; стекло 90%, blur 16 px, saturation 110%, без тени; непрозрачный fallback и reduced transparency |
 | MenuLinks | default, pointer-hover, focus-visible, active, aria-current; фон карточки, рамка, акцент без сдвига |
 | Меню (бургер) | один и тот же нативный details на всех экранах; default/open/active/focus; иконка 24 px без рамки, состояние только цветом, с 1001 px — 28 px; Escape возвращает фокус; закрытие снаружи, при уходе фокуса, прокрутке и смене режима; без JS работает раскрытие. До 1000 px панель во всю ширину, с 1001 px — отдельная карточка `--nav-measure` у правого края контейнера, смещена на space-2 вниз, чтобы не сливаться с шапкой; внутри панели пункты меню, почта и Telegram |
-| Footer | фон страницы, разделители и инструменты; имя слева без подписи, справа две группы: «Контакты» из `contactLinks()` и «Разделы» из `site.navigation` |
+| Footer | фон страницы, разделители и инструменты; имя слева без подписи, справа две группы: «Контакты» из `contactLinks()` и «Разделы» из `site.navigation`; ссылки каждой группы идут вертикально, строка 32 px, порядок контактов — сначала почта, затем Telegram |
 | ThemeToggle / ThemeInit | минимальные sun/moon из Icon; ранний выбор темы и доступное название следующего действия |
 | Button / Link | pill; default/hover/focus-visible/pressed; disabled только настоящему button; focus 2 px с offset 4 px; CTA сохраняет естественную ширину |
 | ContentCard | статичный article: ровно cover/date/title/summary; интерактивен только заголовок; без hover всей коробки, обрезки или резервирования строк |
@@ -142,6 +143,7 @@ Cloudflare — ориентир ясности и системности, а н�
 | Breadcrumbs | весь текст в DOM; fade хвоста вместо многоточия; ссылки с focus/hover |
 | EmailContact | буквальный mailto, отдельный copy 22×22; idle/copying/success/error/reset; aria-busy и live region; в шапке — только внутри панели меню |
 | ArticleShare | Telegram/VK + URL copy; метка — одно предложение «Поделиться:»; контрол 32×32 px вокруг иконки 24 px (WCAG 2.5.8, а не `--tap`); default/focus/hover/pressed/copying/feedback/reset; успех и ошибка различаются, ложной галочки нет |
+| Читайте также | секция `.related` под статьёй занимает ту же колонку, что и тело: `--measure` по центру, а не всю ширину контейнера; сетка `auto-fit` с карточкой не уже 320 px, поэтому две карточки стоят в ряд, а новые добавляют строку, а не сжимаются; отбор — те же темы, не больше двух. Отдельной ссылки «Назад в блог» нет: возврат — крошка и меню (владелец, 24.10.2026) |
 | HeadingAnchors | отдельная кнопка H2–H6, только hover/focus-visible; не сдвигает текст; телефон/нет hover — скрыта; copying/success/error/reset |
 | Icon | общий источник SVG включая sun/moon; авторские формы Telegram сохранены; геометрия масок цитаты/заметки остаётся CSS-ассетом |
 | Analytics | та же модель согласия; нижняя полоса, «Окей»/«Отказаться», settings, возврат фокуса и измерение высоты; никакого loading ради оформления |
