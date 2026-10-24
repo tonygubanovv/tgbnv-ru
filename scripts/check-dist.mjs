@@ -2,6 +2,7 @@
 import { readFile, access, readdir } from 'node:fs/promises';
 import { site, mainMenu, blogTagSlugs } from '../src/config/site.ts';
 import { closedPaths, legalPaths, movedPaths } from '../src/utils/routes.ts';
+import { readingMinutes } from '../src/utils/reading.ts';
 import { checkAnalytics } from './check-analytics.mjs';
 import { parse } from 'parse5';
 import { parseSeoTable, seoPath } from '../src/utils/seoTable.ts';
@@ -292,6 +293,16 @@ for (const page of await walk(dist)) {
         const [page, query] = (chip.attrs?.find(attr => attr.name === 'href')?.value ?? '').split('?');
         if (page !== '/blog/' || !topicSlugs.has(new URLSearchParams(query).get('topic') ?? '')) errors.push(`Article topic chip does not return to a filtered blog: ${path}`);
       }
+      // The printed reading time has to be the body's own: nobody types it, so a mismatch means the number stopped being derived.
+      const items = elements(header).filter(node => (node.attrs?.find(attr => attr.name === 'class')?.value ?? '').split(/\s+/).includes('meta-item'));
+      const printed = items.map(node => textChunks(node).join('').trim()).find(value => /^\d+\s+мин$/u.test(value)) ?? '';
+      const source = await readFile(new URL(`../content/blog/${pagePath.split('/')[1]}/index.md`, import.meta.url), 'utf8');
+      if (!printed || Number(printed.match(/^\d+/u)[0]) !== readingMinutes(source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, ''))) {
+        errors.push(`Article reading time is missing or does not match its body: ${path}`);
+      }
+      // Both technical items are a glyph plus text; a bare number or a bare date means the pair lost its icon.
+      for (const item of items) if (!elements(item).some(node => node.tagName === 'svg')) errors.push(`Article meta item has no glyph: ${path}`);
+      if (items.length < 2) errors.push(`Article header carries fewer than two meta items: ${path}`);
     }
   }
   if (path === 'index.html' && !structured.some(graph => graph['@type'] === 'Person' && graph.name === site.author)) errors.push('Home page must identify the real author');

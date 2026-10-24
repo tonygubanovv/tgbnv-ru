@@ -6,10 +6,12 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import ContentCard from '../components/ContentCard.astro';
 import HeadingAnchors from '../components/HeadingAnchors.astro';
 import ArticleShare from '../components/ArticleShare.astro';
+import Icon from '../components/Icon.astro';
 import { pageSeo } from '../utils/seo';
 import { site } from '../config/site';
 import { absoluteUrl, url, tagSlug } from '../utils/urls';
 import { dateLabel, blogEntries, publicationPath } from '../utils/content';
+import { readingMinutes } from '../utils/reading';
 interface Props { entry: CollectionEntry<'blog'> }
 const { entry } = Astro.props;
 const { data } = entry;
@@ -18,6 +20,8 @@ const preserveText = data.preserveText;
 const path = publicationPath(entry);
 const { description } = pageSeo(path);
 const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
+// The body is typed optional because a custom loader may omit it; the smoke check compares this number with the source file.
+const minutes = readingMinutes(entry.body ?? '');
 const related = (await blogEntries()).filter(other => other.id !== entry.id && other.data.tags.some(tag => data.tags.includes(tag))).slice(0, 2);
 // Social crawlers and Yandex do not take AVIF, and they must not be sent the 2,7 MB source either: one flat JPEG for the card.
 const social = data.cover ? await getImage({ src: data.cover.src, format: 'jpeg', width: 1200, quality: 76 }) : undefined;
@@ -36,7 +40,7 @@ const jsonLd = {
     {toc.length > 0 && <aside class="publication-sidebar"><nav class="toc" aria-label="Содержание"><h2>Содержание</h2><ul>{toc.map(h => <li class:list={{ 'toc-sub': h.depth === 3 }}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul></nav></aside>}
     <article class="publication">
       <Breadcrumbs current={data.title} bare />
-      <header class="publication-header"><div class="meta"><time datetime={data.date}>{dateLabel(data.date)}</time>{data.tags.map(tag => <a class="tag" href={`${url('blog/')}?topic=${tagSlug(tag)}`}>{tag}</a>)}</div><h1 data-preserve-text={preserveText ? 'true' : undefined}>{data.title}</h1><p class="publication-summary">{data.summary}</p>{'updated' in data && data.updated && <p class="muted">Обновлено: <time datetime={data.updated}>{dateLabel(data.updated)}</time></p>}
+      <header class="publication-header"><div class="meta"><span class="meta-item"><Icon name="calendar" size={14} /><time datetime={data.date}>{dateLabel(data.date)}</time></span><span class="meta-item"><Icon name="clock" size={14} />{minutes}&nbsp;мин</span>{data.tags.map(tag => <a class="tag" href={`${url('blog/')}?topic=${tagSlug(tag)}`}>{tag}</a>)}</div><h1 data-preserve-text={preserveText ? 'true' : undefined}>{data.title}</h1><p class="publication-summary">{data.summary}</p>{'updated' in data && data.updated && <p class="muted">Обновлено: <time datetime={data.updated}>{dateLabel(data.updated)}</time></p>}
       </header>
       {data.cover && <Image class="publication-cover" src={data.cover.src} alt={data.cover.alt} widths={[720, 1440]} sizes="(max-width: 700px) calc(100vw - 48px), (max-width: 784px) calc(100vw - 64px), 720px" quality={74} loading="eager" decoding="async" />}
       <div class="prose" data-preserve-text={preserveText ? 'true' : undefined}><Content /></div>
