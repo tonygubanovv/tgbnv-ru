@@ -19,8 +19,12 @@
 | Состав и порядок блоков главной | `src/pages/index.astro` |
 | Раздел «Навыки» (`/skills/`) | `src/pages/skills.astro` — разметка и оформление; `skillGroups` в `src/config/site.ts` — названия и навыки |
 | Раздел «Рекомендую» (`/recommend/`) | `src/pages/recommend.astro` — оформление; `recommendations` в `src/config/site.ts` — названия, описания и ссылки |
-| Значок сайта | `public/favicon.svg` и `public/favicon.ico` — один значок в двух форматах; подключение в `src/components/SEOHead.astro` |
+| Значок сайта | Исходный знак — `public/favicon.svg`; из него получены `favicon.ico` (16, 32 и 48 px в одном файле), `favicon-16x16.png`, `favicon-32x32.png` и `apple-touch-icon.png` (180 px). Список значков для телефона — `src/pages/site.webmanifest.ts`, все подключения — в `src/components/SEOHead.astro` |
 | Цвет, размер текста, отступы | `src/styles/global.css` |
+| Правила ролей, тем, компонентов и расширения | `docs/agents/specs/DESIGN_SYSTEM.md`; отчёт проверки — `docs/guides/DESIGN_SYSTEM_REVIEW.md` |
+| Раннее применение темы | `src/components/ThemeInit.astro` — общий для SEOHead и служебных перенаправлений |
+| Цвета подсветки кода | `--code-*` в `src/styles/global.css`; привязка Shiki — `markdown.shikiConfig` в `astro.config.mjs` |
+| Общую картинку превью | `scripts/templates/og.astro` — шаблон с общими токенами; `public/og.png` — экспорт 1200×630 |
 | Общую шапку или подвал | `src/components/Header.astro`, `Footer.astro` |
 | Внешний вид всех статей сразу | `src/layouts/PublicationLayout.astro` |
 

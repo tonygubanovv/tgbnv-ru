@@ -69,9 +69,32 @@ if (await exists('favicon.ico')) {
     }
   }
 } else errors.push('Missing dist/favicon.ico');
-if (!elements(parse(home)).some(node => node.tagName === 'link' && node.attrs?.some(attr => attr.name === 'rel' && attr.value === 'icon') && node.attrs?.some(attr => attr.name === 'href' && attr.value === `${expectedBase}favicon.ico`))) {
-  errors.push('The page head must link to favicon.ico');
+// A home-screen shortcut is built from the declared sizes only, so each raster has to match its own name.
+for (const [file, side] of [['favicon-16x16.png', 16], ['favicon-32x32.png', 32], ['apple-touch-icon.png', 180]]) {
+  if (!await exists(file)) { errors.push(`Missing dist/${file}`); continue; }
+  const png = await readFile(new URL(file, dist));
+  // PNG stores width and height as big-endian uint32 in the IHDR chunk right after the signature.
+  if (png.length < 24 || png.readUInt32BE(16) !== side || png.readUInt32BE(20) !== side) errors.push(`dist/${file} must be ${side}x${side}`);
 }
+const headLinks = elements(parse(home)).filter(node => node.tagName === 'link');
+for (const [rel, href] of [
+  ['icon', `${expectedBase}favicon.svg`],
+  ['icon', `${expectedBase}favicon.ico`],
+  ['apple-touch-icon', `${expectedBase}apple-touch-icon.png`],
+  ['manifest', `${expectedBase}site.webmanifest`],
+]) {
+  if (!headLinks.some(node => node.attrs?.some(attr => attr.name === 'rel' && attr.value === rel) && node.attrs?.some(attr => attr.name === 'href' && attr.value === href))) {
+    errors.push(`The page head must link ${rel} ${href}`);
+  }
+}
+// Android reads the icon set only from the manifest, so its own addresses have to resolve in the build.
+try {
+  const manifest = JSON.parse(await readFile(new URL('site.webmanifest', dist), 'utf8'));
+  if (!manifest.name || !Array.isArray(manifest.icons) || manifest.icons.length === 0) errors.push('dist/site.webmanifest must name the site and list icons');
+  for (const icon of manifest.icons ?? []) {
+    if (!await exists(icon.src.replace(/^\//u, ''))) errors.push(`dist/site.webmanifest points at a missing file: ${icon.src}`);
+  }
+} catch { errors.push('dist/site.webmanifest must be valid JSON'); }
 if (!await exists('recommend/index.html')) errors.push('Missing recommendations page');
 
 for (const path of ['index.html', 'blog/index.html', '404.html', 'robots.txt', 'robots-yandex.txt', '4705095550820effb099a08c420e8464.txt', 'privacy/index.html', 'cookies/index.html', 'consent/index.html', 'legal/index.html', 'legal/privacy/index.html', 'legal/cookies/index.html', 'legal/consent/index.html', 'sitemap-0.xml']) {
