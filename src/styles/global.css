@@ -310,6 +310,18 @@ svg { flex-shrink: 0; }
 .about-more[open] summary .icon { transform: rotate(-90deg); }
 .about-story { margin-top: var(--space-4); }
 .about-story p + p { margin-top: var(--space-5); }
+/* The spoiler opens the way the menu panel does — the same panel timing, not a hard show/hide (owner, 24.10.2026).
+   The words ride in from under the clip while the row grows, so no line ever slides on top of another line. */
+.about-more::details-content { transition: content-visibility var(--duration-panel) allow-discrete; }
+@supports selector(details::details-content) {
+  .about-more { interpolate-size: allow-keywords; }
+  .about-more::details-content { block-size: 0; overflow: clip; opacity: 0; transform: translateY(calc(-1 * var(--space-2))); transition: block-size var(--duration-panel) var(--ease-panel), opacity var(--duration-panel) var(--ease-panel), transform var(--duration-panel) var(--ease-panel), content-visibility var(--duration-panel) allow-discrete; }
+  .about-more[open]::details-content { block-size: auto; opacity: 1; transform: translateY(0); }
+  @starting-style { .about-more[open]::details-content { block-size: 0; opacity: 0; transform: translateY(calc(-1 * var(--space-2))); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-more, .about-more::details-content { transition: none; }
+}
 /* Tags are quiet labels; only the ones that lead somewhere are clickable and taller. */
 .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5); }
 .tag { display: inline-flex; align-items: center; padding: var(--line-thin) var(--space-2); min-height: var(--space-5); border: var(--line-thin) solid var(--border); border-radius: var(--radius-md); font-size: var(--text-1); color: var(--muted); line-height: var(--leading-label); }
@@ -485,8 +497,9 @@ body:has(.site-header.is-hidden:not(:focus-within)) .toc { top: var(--toc-gap); 
 /* The recommendations keep the article column: the same measure and the same edges as the body text (owner, 24.10.2026). */
 .related { max-width: var(--measure); margin: var(--space-8) auto 0; }
 .related > h2 { font-size: var(--text-6); margin-bottom: var(--space-5); }
-/* One row of two cards, and the next row appears by itself as soon as the list grows: a card never falls below the measure. */
-.related .card-grid { grid-template-columns: repeat(auto-fit, minmax(var(--related-card-measure), 1fr)); }
+/* Tracks are kept even when the row is half empty: one recommendation stands at its ordinary card width instead of being
+   pulled across the column, and a longer list simply fills the next track and then the next row (owner, 24.10.2026). */
+.related .card-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--related-card-measure)), 1fr)); }
 @media (max-width: 1000px) {
   :root { --gutter: var(--space-6); }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
