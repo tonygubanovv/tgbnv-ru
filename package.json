@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "check": "astro check && node --test scripts/typography.test.mjs scripts/blocks.test.mjs scripts/seo.test.mjs scripts/documentation.test.mjs scripts/design-system.test.mjs scripts/reading.test.mjs",
+    "check": "astro check && node --test scripts/typography.test.mjs scripts/blocks.test.mjs scripts/seo.test.mjs scripts/documentation.test.mjs scripts/design-system.test.mjs scripts/reading.test.mjs scripts/lastmod.test.mjs",
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1",
     "smoke": "node scripts/check-dist.mjs"

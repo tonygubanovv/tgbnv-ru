@@ -1,8 +1,9 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
-import { copyFile, writeFile } from 'node:fs/promises';
+import { copyFile, readFile, writeFile } from 'node:fs/promises';
 import { sitemapMeta } from './src/utils/sitemapMeta.ts';
+import { dateOnlyLastmod } from './src/utils/lastmod.ts';
 import { isClosedPath, movedPaths } from './src/utils/routes.ts';
 import { site } from './src/config/site.ts';
 
@@ -52,6 +53,14 @@ export default defineConfig({
           // The owner reads /sitemap.xml in the webmaster consoles, so it must list the pages themselves,
           // not an index with one link to a second file.
           await copyFile(new URL('sitemap-0.xml', dir), new URL('sitemap.xml', dir));
+          // The sitemap package always prints a full ISO timestamp and offers no date-only switch, so the plain day the
+          // owner asked for (24.10.2026) is written back over the files the integration just produced.
+          for (const file of ['sitemap-0.xml', 'sitemap.xml', 'sitemap-index.xml']) {
+            const url = new URL(file, dir);
+            const xml = await readFile(url, 'utf8');
+            const dates = dateOnlyLastmod(xml);
+            if (dates !== xml) await writeFile(url, dates);
+          }
         },
       },
     },

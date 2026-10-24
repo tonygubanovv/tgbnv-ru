@@ -1,11 +1,10 @@
-/** Sitemap metadata for the real pages of this site: publication dates and one priority scheme. */
+/** Sitemap metadata for the real pages of this site: content-change dates and one priority scheme. */
 import { readdirSync, readFileSync } from 'node:fs';
+import { contentChangeDate, frontmatterDate } from './lastmod.ts';
 
-type Post = { path: string; lastmod: string };
+type Post = { path: string; published: string; lastmod: string };
 
-const isoDate = (block: string, field: string) => block.match(new RegExp(`^${field}:\\s*"?(\\d{4}-\\d{2}-\\d{2})"?`, 'm'))?.[1];
-
-// The content schema validates the same fields, so an unreadable date simply leaves the entry without lastmod.
+// A folder of the blog collection is a slug with one index.md next to its pictures; the whole folder is what the article consists of.
 function readPosts(directory: string, prefix: string): Post[] {
   let names: string[];
   try {
@@ -15,10 +14,10 @@ function readPosts(directory: string, prefix: string): Post[] {
   }
   const posts: Post[] = [];
   for (const name of names.filter(entry => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry))) {
-    const block = readFileSync(`${directory}/${name}/index.md`, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
-    const published = isoDate(block, 'date');
+    const published = frontmatterDate(readFileSync(`${directory}/${name}/index.md`, 'utf8'), 'date');
+    // The content schema validates the same field, so an unreadable date leaves the entry without lastmod.
     if (!published) continue;
-    posts.push({ path: `${prefix + name}/`, lastmod: isoDate(block, 'updated') ?? published });
+    posts.push({ path: `${prefix + name}/`, published, lastmod: contentChangeDate(process.cwd(), `${directory}/${name}`, published) });
   }
   return posts;
 }
@@ -32,6 +31,7 @@ const siteNewest = newest(blog);
 export function sitemapMeta(pathname: string): { lastmod?: Date; changefreq: string; priority: number } {
   const path = pathname.replace(/^\/+/, '');
   const meta = (lastmod: string | undefined, changefreq: string, priority: number) => ({
+    // Only the day matters to the crawlers; the build writes the time out of the file afterwards.
     lastmod: lastmod ? new Date(`${lastmod}T00:00:00Z`) : undefined,
     changefreq,
     priority,

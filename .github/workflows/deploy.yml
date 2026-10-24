@@ -18,6 +18,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Sitemap dates are read from the history of each article folder; the default one-commit checkout has no history.
+          fetch-depth: 0
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

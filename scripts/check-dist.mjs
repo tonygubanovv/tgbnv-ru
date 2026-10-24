@@ -3,6 +3,7 @@ import { readFile, access, readdir } from 'node:fs/promises';
 import { site, mainMenu, blogTagSlugs } from '../src/config/site.ts';
 import { closedPaths, legalPaths, movedPaths } from '../src/utils/routes.ts';
 import { readingMinutes } from '../src/utils/reading.ts';
+import { contentChangeDate, frontmatterDate } from '../src/utils/lastmod.ts';
 import { checkAnalytics } from './check-analytics.mjs';
 import { parse } from 'parse5';
 import { parseSeoTable, seoPath } from '../src/utils/seoTable.ts';
@@ -382,15 +383,15 @@ for (const path of site.search.indexingEnabled ? legalPaths : []) {
   if (countMatches(yandexFile, `Disallow: /${path}`) !== 1) errors.push(`Document page is missing from the Yandex file: /${path}`);
 }
 
-// Publication dates must come from the content, never from the build clock.
-const sourceDates = new Set([site.legal.updated]);
-for (const collection of ['blog']) {
-  for (const name of await readdir(new URL(`../content/${collection}/`, import.meta.url), { withFileTypes: true })) {
-    if (!name.isDirectory()) continue;
-    const block = await readFile(new URL(`../content/${collection}/${name.name}/index.md`, import.meta.url), 'utf8');
-    for (const match of block.matchAll(/^(?:date|updated):\s*"?(\d{4}-\d{2}-\d{2})"?/gm)) sourceDates.add(match[1]);
-  }
+// Sitemap dates come from the article files and from the history of their folders, never from the build clock.
+const articles = new Map();
+for (const name of await readdir(new URL('../content/blog/', import.meta.url), { withFileTypes: true })) {
+  if (!name.isDirectory()) continue;
+  const published = frontmatterDate(await readFile(new URL(`../content/blog/${name.name}/index.md`, import.meta.url), 'utf8'), 'date');
+  if (!published) continue;
+  articles.set(`blog/${name.name}/`, { published, changed: contentChangeDate(process.cwd(), `content/blog/${name.name}`, published) });
 }
+const newestContent = [...articles.values()].map(article => article.changed).sort().at(-1);
 
 const sitemapPart = await readFile(new URL('sitemap-0.xml', dist), 'utf8');
 const entries = [...sitemapPart.matchAll(/<url>([\s\S]*?)<\/url>/g)];
@@ -406,10 +407,23 @@ for (const [, body] of entries) {
   if (!loc.startsWith(canonicalPrefix)) errors.push(`Sitemap URL outside the approved domain: ${loc}`);
   if (!/<priority>/.test(body)) errors.push(`Sitemap URL without priority: ${loc}`);
   const lastmod = body.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1];
-  if (!lastmod) continue;
-  if (!sourceDates.has(lastmod.slice(0, 10))) errors.push(`Sitemap lastmod is not a real publication date: ${loc} -> ${lastmod}`);
-  if (Date.parse(lastmod) > Date.now() + 86_400_000) errors.push(`Sitemap lastmod is in the future: ${loc} -> ${lastmod}`);
+  const path = loc.slice(canonicalPrefix.length);
+  const article = articles.get(path);
+  if (!lastmod) {
+    if (article) errors.push(`Article in the sitemap without lastmod: ${loc}`);
+    continue;
+  }
+  if (Date.parse(`${lastmod}T00:00:00Z`) > Date.now() + 86_400_000) errors.push(`Sitemap lastmod is in the future: ${loc} -> ${lastmod}`);
+  if (article) {
+    if (lastmod !== article.changed) errors.push(`Sitemap lastmod is not the day this article's content changed: ${loc} -> ${lastmod}, expected ${article.changed}`);
+    if (lastmod < article.published) errors.push(`Sitemap lastmod is earlier than the publication date: ${loc} -> ${lastmod}`);
+  } else if (path === '' || path === 'blog/') {
+    if (newestContent && lastmod !== newestContent) errors.push(`Sitemap lastmod of ${path || 'the home page'} is not the newest content change: ${lastmod}, expected ${newestContent}`);
+  } else {
+    errors.push(`Sitemap lastmod on a page whose date the build does not derive: ${loc} -> ${lastmod}`);
+  }
 }
+if (/<lastmod>[^<]*T/.test(sitemapPart)) errors.push('Sitemap lastmod must be a plain day, without a time');
 
 const sitemap = await exists('sitemap.xml') ? await readFile(new URL('sitemap.xml', dist), 'utf8') : '';
 if (sitemap !== sitemapPart) errors.push('sitemap.xml is not the page list of this build');

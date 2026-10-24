@@ -15,6 +15,7 @@
 | Пункты меню и SVG-иконки | `mainMenu` в `src/config/site.ts`; общая разметка и hover — `src/components/MenuLinks.astro`, SVG — `src/components/Icon.astro`, бургер, панель и контакты внутри неё — `Header.astro`, копирование адреса — `EmailContact.astro` |
 | Фильтр тем в блоге | `src/pages/blog/index.astro` — чипы и скрытие карточек; темы берутся из `blogTags` в `src/config/site.ts`, отдельной страницы у темы нет. Чип в шапке статьи (`PublicationLayout.astro`) ведёт на `/blog/?topic=` и открывает ленту уже отфильтрованной |
 | Время чтения в статье | `src/utils/reading.ts` — число минут считают из текста статьи, в `index.md` его нет и вписать руками нельзя; глифы даты и часов — `calendar` и `clock` в `src/components/Icon.astro` |
+| Дату обновления в `sitemap.xml` | `src/utils/lastmod.ts` — день считает по истории коммитов папки статьи, руками не ставится; приоритеты и порядок — `src/utils/sitemapMeta.ts`; полная история в сборке — `fetch-depth: 0` в `.github/workflows/deploy.yml` |
 | Закрыть страницу от поиска | `site.search` в `src/config/site.ts` — только по решению владельца |
 | Старые адреса и перенаправления | `movedPaths` в `src/utils/routes.ts` |
 | Содержимое юридического документа | `src/pages/legal/` — документы содержат подстановки из общих настроек |
